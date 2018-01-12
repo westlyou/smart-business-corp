@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
                 mes = fecha[5:7]
                 anho = fecha[0:4]
 
-                tipo_cambio = self.tipo_cambio(''.join((anho, mes, dia)))
+                tipo_cambio = self.tipo_cambio('-'.join((anho, mes, dia)))
 
                 if tipo_cambio:
                     self.valor_tipo_cambio = value_tipo_cambio == 'V' and tipo_cambio['venta'] or tipo_cambio['compra']
