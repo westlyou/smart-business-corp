@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api
 
+
 # class biosis_logistic(models.Model):
 #     _name = 'biosis_logistic.biosis_logistic'
 
@@ -18,7 +19,8 @@ class SaleLinea(models.Model):
     _name = "sale.linea"
     _description = u"Linea de Automovil"
 
-    name = fields.Char(string=u'Linea',required=True)
+    name = fields.Char(string=u'Linea', required=True)
+
 
 class SaleDeposito(models.Model):
     _name = "sale.deposito"
@@ -26,11 +28,13 @@ class SaleDeposito(models.Model):
 
     name = fields.Char(string=u'Depósito', required=True)
 
+
 class SaleVacio(models.Model):
     _name = "sale.vacio"
     _description = u"Vacios"
 
     name = fields.Char(string=u'Agente de Aduana', required=True)
+
 
 class SaleTipoVacio(models.Model):
     _name = "sale.tipo.vacio"
@@ -38,11 +42,13 @@ class SaleTipoVacio(models.Model):
 
     name = fields.Char(string=u'Tipo Vacios', required=True)
 
+
 class SaleAgenteAduana(models.Model):
     _name = "sale.agente.aduana"
     _description = u"Agente de Aduana"
 
     name = fields.Char(string=u'Agente de Aduana', required=True)
+
 
 class SaleAgentePortuario(models.Model):
     _name = "sale.agente.portuario"

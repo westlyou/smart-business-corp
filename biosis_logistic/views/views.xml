@@ -13,11 +13,11 @@
                     <field name="tipo"/>
                 </field>
                 <field name="payment_term_id" position="after">
-                    <field name="linea_id" colspan="2"/>
+                    <field name="linea_id"/>
                     <field name="valor_tipo_cambio"/>
                     <field name="deposito_id"/>
                     <field name="vacio_id"/>
-                    <field name="tipo_vacio_id" nolabel="1"/>
+                    <field name="tipo_vacio_id"/>
                     <field name="agente_aduana_id"/>
                     <field name="agente_portuario_id"/>
                 </field>
