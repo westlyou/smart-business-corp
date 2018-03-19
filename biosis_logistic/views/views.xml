@@ -7,20 +7,33 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="replace">
+                    <field name="date_order" string="Fecha de creación" />
+                </xpath>
+                <xpath expr="//field[@name='pricelist_id']" position="replace">
+                </xpath>
+
                 <field name="partner_id" position="after">
-                    <field name="via"/>
                     <field name="actividad"/>
-                    <field name="tipo"/>
-                </field>
-                <field name="payment_term_id" position="after">
-                    <field name="linea_id"/>
+                    <field name="via"/>
+                    <field name="modalidad"/>
+                    <field name="tipo_contenedor_id"/>
+                    <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
-                    <field name="deposito_id"/>
-                    <field name="vacio_id"/>
-                    <field name="tipo_vacio_id"/>
-                    <field name="agente_aduana_id"/>
-                    <field name="agente_portuario_id"/>
                 </field>
+
+                <xpath expr="//field[@name='payment_term_id']" position="replace">
+                    <field name="payment_term_id" />
+                    <field name="modalidad_pago_id" />
+                    <field name="linea_id"/>
+                    <field name="agente_portuario_id"/>
+                    <field name="vacio_id"/>
+                    <field name="deposito_id"/>
+                    <field name="agente_aduana_id"/>
+                    <field name="transporte_id"/>
+                    <field name="resguardo_id"/>
+                    <!--<field name="tipo_vacio_id"/>-->
+                </xpath>
             </field>
         </record>
     </data>

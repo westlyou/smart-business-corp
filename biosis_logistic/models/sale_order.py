@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
         ('E', u'Exportación'),
         ('I', u'Importación')
     ], string=u'Actividad', required=True, default="E")
-    tipo = fields.Selection([
+    modalidad = fields.Selection([
         ('FCL', u'Full Container Load'),
         ('LCL', u'Less Container Load')
     ], string=u'Tipo', required=True, default="FCL")
@@ -28,7 +28,11 @@ class SaleOrder(models.Model):
     tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('sale.agente.aduana', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('sale.agente.portuario', string=u'Agente Portuario')
-    valor_tipo_cambio = fields.Float(string=u'Valor tipo Cambio', store=True, digits=(4, 3))
+    valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
+    tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string='Tipo de contenedor')
+    modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
+    transporte_id = fields.Many2one('sale.transporte', string='Transporte')
+    resguardo_id = fields.Many2one('sale.resgauardo', string='Resguardo')
 
     def mapear_tc(self, mes, anio):
         web = urllib2.urlopen(

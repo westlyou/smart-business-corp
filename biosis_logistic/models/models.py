@@ -55,3 +55,29 @@ class SaleAgentePortuario(models.Model):
     _description = u"Agente Portuario"
 
     name = fields.Char(string=u'Agente Portuario', required=True)
+
+
+class TipoContenedor(models.Model):
+    _name = 'sale.contenedor.tipo'
+    _description = 'Tipo de contenedor'
+
+    name = fields.Char('Nombre')
+
+
+class ModalidadPago(models.Model):
+    _name = 'sale.pago.modalidad'
+    _description = 'Modalidad de pago'
+
+    name = fields.Char('Modalidad')
+
+
+class Transporte(models.Model):
+    _name = 'sale.transporte'
+
+    name = fields.Char('Transporte')
+
+
+class Resguardo(models.Model):
+    _name = 'sale.resguardo'
+
+    name = fields.Char('Resguardo')
