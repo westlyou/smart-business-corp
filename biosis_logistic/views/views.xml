@@ -16,8 +16,8 @@
                 <field name="partner_id" position="after">
                     <field name="actividad"/>
                     <field name="via"/>
-                    <field name="modalidad"/>
-                    <field name="tipo_contenedor_id"/>
+                    <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')]}"/>
+                    <field name="tipo_contenedor_id" attrs="{'invisible': [('modalidad','!=', 'FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
                 </field>

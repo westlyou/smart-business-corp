@@ -32,7 +32,7 @@ class SaleOrder(models.Model):
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string='Tipo de contenedor')
     modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('sale.transporte', string='Transporte')
-    resguardo_id = fields.Many2one('sale.resgauardo', string='Resguardo')
+    resguardo_id = fields.Many2one('sale.resguardo', string='Resguardo')
 
     def mapear_tc(self, mes, anio):
         web = urllib2.urlopen(

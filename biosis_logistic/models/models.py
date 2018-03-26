@@ -17,7 +17,7 @@ from odoo import models, fields, api
 
 class SaleLinea(models.Model):
     _name = "sale.linea"
-    _description = u"Linea de Automovil"
+    _description = u"Linea naviera"
 
     name = fields.Char(string=u'Linea', required=True)
 
@@ -81,3 +81,5 @@ class Resguardo(models.Model):
     _name = 'sale.resguardo'
 
     name = fields.Char('Resguardo')
+
+
