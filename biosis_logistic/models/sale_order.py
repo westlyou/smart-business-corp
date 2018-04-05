@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
             'product_id': False,
             'name': False,
             'product_uom_qty': 1,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'tax_id': False,
             'product_uom': False
         }
@@ -128,6 +128,9 @@ class SaleOrder(models.Model):
         portuario = product_obj.search([('default_code', '=', 'AGNTPORTUARIO')])
         vacio = product_obj.search([('default_code', '=', 'ALMVAC')])
         ingreso = product_obj.search([('default_code', '=', 'ALMING')])
+        aduana = product_obj.search([('default_code', '=', 'AGNTADUANERO')])
+        transporte = product_obj.search([('default_code', '=', 'TRANSP')])
+        resguardo = product_obj.search([('default_code', '=', 'RESG')])
 
         unidad = self.env['product.uom'].browse([1])
 
@@ -151,7 +154,51 @@ class SaleOrder(models.Model):
             'order_id': order_id
         })
 
+        line_ingreso = line_obj.create({
+            'product_id': ingreso.id,
+            'name': self.deposito_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
+        line_aduana = line_obj.create({
+            'product_id': aduana.id,
+            'name': self.agente_aduana_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
+        line_transporte = line_obj.create({
+            'product_id': transporte.id,
+            'name': self.transporte_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
+        line_resguardo = line_obj.create({
+            'product_id': resguardo.id,
+            'name': self.resguardo_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
         order_lines.append(line_portuario.id)
         order_lines.append(line_vacio.id)
+        order_lines.append(line_ingreso.id)
+        order_lines.append(line_aduana.id)
+        order_lines.append(line_transporte.id)
+        order_lines.append(line_resguardo.id)
 
         self.order_line = [(6, 0, order_lines)]
