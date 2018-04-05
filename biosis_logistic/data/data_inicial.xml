@@ -9,6 +9,7 @@
             <field name="description_sale">Agente portuario</field>
             <field name="default_code">AGNTPORT</field>
             <field name="purchase_ok" eval="False" />
+            <field name="purchase_line_warn">no-message</field>
         </record>
 
         <record id="serv_almacen_vacio" model="product.product">
@@ -20,6 +21,7 @@
             <field name="description_sale">Almacén de vacío</field>
             <field name="default_code">ALMVAC</field>
             <field name="purchase_ok" eval="False" />
+            <field name="purchase_line_warn">no-message</field>
         </record>
 
         <record id="serv_almacen_ingreso" model="product.product">
@@ -31,6 +33,7 @@
             <field name="description_sale">Almacén de ingreso</field>
             <field name="default_code">ALMING</field>
             <field name="purchase_ok" eval="False" />
+            <field name="purchase_line_warn">no-message</field>
         </record>
 
         <record id="serv_agente_portuario" model="product.product">
@@ -42,6 +45,7 @@
             <field name="description_sale">Agencia de aduana</field>
             <field name="purchase_ok" eval="False" />
             <field name="default_code">AGNTPORTUARIO</field>
+            <field name="purchase_line_warn">no-message</field>
         </record>
 
         <record id="serv_transporte" model="product.product">
@@ -53,6 +57,7 @@
             <field name="description_sale">Servicio de transporte</field>
             <field name="purchase_ok" eval="False" />
             <field name="default_code">TRANSPORTE</field>
+            <field name="purchase_line_warn">no-message</field>
         </record>
 
         <record id="serv_resguardo" model="product.product">
@@ -64,6 +69,7 @@
             <field name="description_sale">Servicio de resguardo</field>
             <field name="purchase_ok" eval="False" />
             <field name="default_code">RESGUARDO</field>
+            <field name="purchase_line_warn">no-message</field>
         </record>
     </data>
 </odoo>
