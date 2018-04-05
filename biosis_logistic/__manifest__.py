@@ -27,6 +27,8 @@
         # 'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'data/data_inicial.xml',
+        'views/linea_naviera.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

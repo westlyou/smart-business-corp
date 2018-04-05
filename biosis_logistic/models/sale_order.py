@@ -22,6 +22,7 @@ class SaleOrder(models.Model):
         ('FCL', u'Full Container Load'),
         ('LCL', u'Less Container Load')
     ], string=u'Tipo', required=True, default="FCL")
+
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
     deposito_id = fields.Many2one('sale.deposito', string=u'Depósito')
     vacio_id = fields.Many2one('sale.vacio', string=u'Vacio')
@@ -33,6 +34,7 @@ class SaleOrder(models.Model):
     modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('sale.transporte', string='Transporte')
     resguardo_id = fields.Many2one('sale.resguardo', string='Resguardo')
+    zona_id = fields.Many2one('sale.zona', string='Zona')
 
     def mapear_tc(self, mes, anio):
         web = urllib2.urlopen(
@@ -103,6 +105,53 @@ class SaleOrder(models.Model):
                     self.valor_tipo_cambio = 0.0
 
         else:
-            self.valor_tipo_cambio = 0.
+            self.valor_tipo_cambio = 0.0
 
             # def get_tc_web(self, mes, anho, dia):
+
+    @api.multi
+    def generar_order_lines(self):
+        order_lines = []
+        line_vals = {
+            'product_id': False,
+            'name': False,
+            'product_uom_qty': 1,
+            'price_unit': 1.0,
+            'tax_id': False,
+            'product_uom': False
+        }
+
+        order_id = self.id
+        product_obj = self.env['product.product']
+        line_obj = self.env['sale.order.line']
+
+        portuario = product_obj.search([('default_code', '=', 'AGNTPORTUARIO')])
+        vacio = product_obj.search([('default_code', '=', 'ALMVACIO')])
+        ingreso = product_obj.search([('default_code', '=', 'ALMING')])
+
+        unidad = self.env['product.uom'].browse([1])
+
+        line_portuario = line_obj.create({
+            'product_id': portuario.id,
+            'name': self.agente_portuario_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
+        line_vacio = line_obj.create({
+            'product_id': vacio.id,
+            'name': self.vacio_id.name,
+            'product_uom_qty': 1,
+            'product_uom': unidad.id,
+            'tax_id': False,
+            'price_unit': 1.0,
+            'order_id': order_id
+        })
+
+        order_lines.append(line_portuario.id)
+        order_lines.append(line_vacio.id)
+
+        self.order_line = [(6, 0, order_lines)]
