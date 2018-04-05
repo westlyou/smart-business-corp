@@ -102,3 +102,5 @@ class Zona(models.Model):
     _name = 'sale.zona'
 
     name = fields.Char('Zona')
+    resguardo_ids = fields.Many2many('sale.resguardo', string='Empresas de resguardo')
+    tranporte_ids = fields.Many2many('sale.transporte', string='Empresas de transporte')

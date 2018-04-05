@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="zona_form" model="ir.ui.view">
+            <field name="name">zona.form</field>
+            <field name="model">sale.zona</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name" string="Zona" required="1"/>
+                        </group>
+
+                        <group>
+                            <group>
+                                <field name="resguardo_ids" string="Empresas de resguardo" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="transporte_ids" string="Empresas de transporte" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_zona" model="ir.actions.act_window">
+            <field name="name">Zonas</field>
+            <field name="res_model">sale.zona</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Configure una zona
+                </p>
+                <p>
+                    Configurar una zona con la lista de transportistas y resguardo
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Zonas"
+                  id="menu_zona"
+                  parent="root_logistica"
+                  action="action_zona"
+                  sequence="80"/>
+
+
+
+
+    </data>
+</odoo>
