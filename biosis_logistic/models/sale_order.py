@@ -126,7 +126,7 @@ class SaleOrder(models.Model):
         line_obj = self.env['sale.order.line']
 
         portuario = product_obj.search([('default_code', '=', 'AGNTPORTUARIO')])
-        vacio = product_obj.search([('default_code', '=', 'ALMVACIO')])
+        vacio = product_obj.search([('default_code', '=', 'ALMVAC')])
         ingreso = product_obj.search([('default_code', '=', 'ALMING')])
 
         unidad = self.env['product.uom'].browse([1])
