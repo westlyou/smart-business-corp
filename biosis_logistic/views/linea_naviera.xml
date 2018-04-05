@@ -12,13 +12,13 @@
 
                         <group>
                             <group>
-                                <field name="representante_ids"/>
+                                <field name="representante_ids" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="vacio_ids"/>
+                                <field name="vacio_ids" widget="many2many_tags"/>
                             </group>
                             <group>
-                                <field name="agente_ids" />
+                                <field name="agente_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                     </sheet>
