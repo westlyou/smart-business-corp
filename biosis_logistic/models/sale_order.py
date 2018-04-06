@@ -140,7 +140,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
@@ -160,7 +160,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
@@ -170,7 +170,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
@@ -180,7 +180,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
@@ -190,7 +190,7 @@ class SaleOrder(models.Model):
             'product_uom_qty': 1,
             'product_uom': unidad.id,
             'tax_id': False,
-            'price_unit': 1.0,
+            'price_unit': 0.0,
             'order_id': order_id
         })
 
