@@ -20,11 +20,11 @@
                     <field name="tipo_contenedor_id" attrs="{'invisible': [('modalidad','!=', 'FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
-                    <field name="zona_id" required="1"/>
-                    <button name="generar_order_lines" string="Generar detalle" type="object" default_focus="1"
-                                class="oe_highlight" />
+                    <!--<field name="zona_id" required="1"/>-->
+                    <!--<button name="generar_order_lines" string="Generar detalle" type="object" colspan="2" default_focus="1"
+                                class="oe_highlight" />-->
                 </field>
-
+                <!--
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="payment_term_id"/>
                     <field name="modalidad_pago_id"/>
@@ -39,8 +39,8 @@
                            domain="[('zona_ids','=',zona_id)]"/>
                     <field name="resguardo_id" attrs="{'invisible': [('zona_id','=', False)]}"
                            domain="[('zona_ids','=',zona_id)]"/>
-                    <!--<field name="tipo_vacio_id"/>-->
                 </xpath>
+                -->
             </field>
         </record>
     </data>
