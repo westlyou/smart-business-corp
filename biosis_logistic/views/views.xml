@@ -24,23 +24,23 @@
                     <!--<button name="generar_order_lines" string="Generar detalle" type="object" colspan="2" default_focus="1"
                                 class="oe_highlight" />-->
                 </field>
-                <!--
+
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="payment_term_id"/>
                     <field name="modalidad_pago_id"/>
-                    <field name="linea_id"/>
-                    <field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=', False)]}"
-                           domain="[('linea_ids','=',linea_id)]" required="1"/>
-                    <field name="vacio_id" attrs="{'invisible': [('linea_id','=', False)]}"
-                           domain="[('linea_ids','=',linea_id)]" required="1"/>
-                    <field name="deposito_id"/>
-                    <field name="agente_aduana_id"/>
-                    <field name="transporte_id" attrs="{'invisible': [('zona_id','=', False)]}"
-                           domain="[('zona_ids','=',zona_id)]"/>
-                    <field name="resguardo_id" attrs="{'invisible': [('zona_id','=', False)]}"
-                           domain="[('zona_ids','=',zona_id)]"/>
+                    <!--<field name="linea_id"/>-->
+                    <!--<field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
+                           <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
+                    <!--<field name="vacio_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
+                           <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
+                    <!--<field name="deposito_id"/>-->
+                    <!--<field name="agente_aduana_id"/>-->
+                    <!--<field name="transporte_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
+                           <!--domain="[('zona_ids','=',zona_id)]"/>-->
+                    <!--<field name="resguardo_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
+                           <!--domain="[('zona_ids','=',zona_id)]"/>-->
                 </xpath>
-                -->
+
             </field>
         </record>
     </data>
