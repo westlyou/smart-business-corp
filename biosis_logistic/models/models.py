@@ -3,17 +3,6 @@
 from odoo import models, fields, api
 
 
-# class biosis_logistic(models.Model):
-#     _name = 'biosis_logistic.biosis_logistic'
-
-#     name = fields.Char()
-#     value = fields.Integer()
-#     value2 = fields.Float(compute="_value_pc", store=True)
-#     description = fields.Text()
-#
-#     @api.depends('value')
-#     def _value_pc(self):
-#         self.value2 = float(self.value) / 100
 class SaleLineaRepresentante(models.Model):
     _name = 'sale.linea.representante'
 
@@ -29,7 +18,6 @@ class SaleLinea(models.Model):
     representante_ids = fields.Many2many('sale.linea.representante', string='Representante', required=True)
     vacio_ids = fields.Many2many('sale.vacio', string='Stock de vacíos')
     agente_ids = fields.Many2many('sale.agente.portuario', string='Agentes portuarios')
-
 
 
 class SaleDeposito(models.Model):
@@ -52,7 +40,6 @@ class SaleTipoVacio(models.Model):
     _description = u"Tipo Vacios"
 
     name = fields.Char(string=u'Tipo Vacios', required=True)
-
 
 
 class SaleAgenteAduana(models.Model):

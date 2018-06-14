@@ -18,6 +18,9 @@
                     <field name="via"/>
                     <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')]}"/>
                     <field name="tipo_contenedor_id" attrs="{'invisible': [('modalidad','!=', 'FCL')]}"/>
+                    <field name="tipo_contenedor_name" invisible="1"/>
+                    <field name="deposito_id" domain="[('name','like',tipo_contenedor_name)]"
+                           attrs="{'invisible': [('tipo_contenedor_id','=',False)]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
                     <!--<field name="zona_id" required="1"/>-->
@@ -30,15 +33,15 @@
                     <field name="modalidad_pago_id"/>
                     <!--<field name="linea_id"/>-->
                     <!--<field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
-                           <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
+                    <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
                     <!--<field name="vacio_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
-                           <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
-                    <!--<field name="deposito_id"/>-->
+                    <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
+                    <!---->
                     <!--<field name="agente_aduana_id"/>-->
                     <!--<field name="transporte_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
-                           <!--domain="[('zona_ids','=',zona_id)]"/>-->
+                    <!--domain="[('zona_ids','=',zona_id)]"/>-->
                     <!--<field name="resguardo_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
-                           <!--domain="[('zona_ids','=',zona_id)]"/>-->
+                    <!--domain="[('zona_ids','=',zona_id)]"/>-->
                 </xpath>
 
             </field>

@@ -6,6 +6,18 @@ import bs4, urllib2, urllib
 from datetime import datetime, date, timedelta
 import calendar
 
+# Permite filtrar resultados acorde a lo que se seleccione
+
+ORDER_LINE_TIPO = (
+    ('linea_aduanera', 'Linea aduanera'),
+    ('zona_transporte', 'Zona de transporte'),
+    ('zona_resguardo', 'Zona de resguardo'),
+    ('cuadrilla', 'Cuadrilla'),
+    ('agente_carga', 'Agente de carga'),
+    ('otros', 'Otros tipos'),
+    ('deposito', 'Deposito')
+)
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -24,13 +36,14 @@ class SaleOrder(models.Model):
     ], string=u'Tipo', required=True, default="FCL")
 
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
-    deposito_id = fields.Many2one('sale.deposito', string=u'Depósito')
+    deposito_id = fields.Many2one('product.product', string=u'Depósito')
     vacio_id = fields.Many2one('sale.vacio', string=u'Vacio')
     tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('sale.agente.aduana', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('sale.agente.portuario', string=u'Agente Portuario')
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string='Tipo de contenedor')
+    tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
     modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('sale.transporte', string='Transporte')
     resguardo_id = fields.Many2one('sale.resguardo', string='Resguardo')
@@ -84,6 +97,39 @@ class SaleOrder(models.Model):
         else:
             fecha_anterior = fecha_date - timedelta(days=1)
             return self.tipo_cambio(fecha_anterior.strftime('%Y-%m-%d'))
+
+    @api.onchange('deposito_id')
+    def onchange_deposito_id(self):
+        for line in self.order_line:
+            if line.tipo == 'deposito' and line.product_id.id == self.deposito_id.id:
+                line.write({
+                    'product_id': self.deposito_id.id,
+                    'name': self.deposito_id.name,
+                    'price_unit': self.deposito_id.list_price
+                })
+                return True
+        # Se reemplaza por el deposito que se ha
+        self.order_line = [0, False, {
+            u'procurement_ids': [],
+            u'tipo': u'deposito',
+            u'route_id': False,
+            u'qty_delivered': 0,
+            u'product_id': self.deposito_id.id,
+            u'product_uom': 1,
+            u'sequence': (len(self.order_line) * 10),
+            u'customer_lead': 0,
+            u'price_unit': self.deposito_id.list_price,
+            u'product_uom_qty': 1,
+            u'discount': 0,
+            u'state': u'draft',
+            u'qty_delivered_updateable': True,
+            u'analytic_tag_ids': [],
+            u'invoice_status': u'no',
+            u'tax_id': [[6, False, [1]]],
+            u'layout_category_id': False,
+            u'name': self.deposito_id.name
+        }]
+        return True
 
     @api.multi
     @api.onchange('date_order')
@@ -202,3 +248,9 @@ class SaleOrder(models.Model):
         order_lines.append(line_resguardo.id)
 
         self.order_line = [(6, 0, order_lines)]
+
+
+class SaleOrderLine(models.Model):
+    _name = 'sale.order.line'
+
+    tipo = fields.Selection(ORDER_LINE_TIPO, default='otros')
