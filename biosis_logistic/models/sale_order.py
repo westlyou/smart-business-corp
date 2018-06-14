@@ -9,13 +9,13 @@ import calendar
 # Permite filtrar resultados acorde a lo que se seleccione
 
 ORDER_LINE_TIPO = (
-    ('linea_aduanera', 'Linea aduanera'),
-    ('zona_transporte', 'Zona de transporte'),
-    ('zona_resguardo', 'Zona de resguardo'),
-    ('cuadrilla', 'Cuadrilla'),
-    ('agente_carga', 'Agente de carga'),
-    ('otros', 'Otros tipos'),
-    ('deposito', 'Deposito')
+    (u'linea_aduanera', u'Linea aduanera'),
+    (u'zona_transporte', u'Zona de transporte'),
+    (u'zona_resguardo', u'Zona de resguardo'),
+    (u'cuadrilla', u'Cuadrilla'),
+    (u'agente_carga', u'Agente de carga'),
+    (u'otros', u'Otros tipos'),
+    (u'deposito', u'Deposito')
 )
 
 
@@ -98,27 +98,67 @@ class SaleOrder(models.Model):
             fecha_anterior = fecha_date - timedelta(days=1)
             return self.tipo_cambio(fecha_anterior.strftime('%Y-%m-%d'))
 
+    @api.depends('linea_id')
     @api.onchange('deposito_id')
     def onchange_deposito_id(self):
-        for line in self.order_line:
-            if line.tipo == 'deposito' and line.product_id.id == self.deposito_id.id:
-                line.write({
-                    'product_id': self.deposito_id.id,
-                    'name': self.deposito_id.name,
-                    'price_unit': self.deposito_id.list_price
-                })
-                return True
+        res = dict()
+        res['value'] = dict()
+        if self.deposito_id:
+            self._cambiar_order_line(u'deposito',self.deposito_id)
+            if self.order_line:
+                for line in self.order_line:
+                    if line.tipo == u'deposito' and line.product_id.id == self.deposito_id.id:
+                        res['order_line'] = [(1, line.id, {
+                            'product_id': self.deposito_id.id,
+                            'name': self.deposito_id.name,
+                            'price_unit': self.deposito_id.lst_price
+                        })]
+                        return res
+            # Se reemplaza por el deposito que se ha
+            res['value']['order_line'] = [(0, False, {
+                u'procurement_ids': [],
+                u'tipo': u'deposito',
+                u'route_id': False,
+                u'qty_delivered': 0,
+                u'product_id': self.deposito_id.id,
+                u'product_uom': 1,
+                u'sequence': (len(self.order_line) * 10),
+                u'customer_lead': 0,
+                u'price_unit': self.deposito_id.lst_price,
+                u'product_uom_qty': 1,
+                u'discount': 0,
+                u'state': u'draft',
+                u'qty_delivered_updateable': True,
+                u'analytic_tag_ids': [],
+                u'invoice_status': u'no',
+                u'tax_id': [[6, False, [1]]],
+                u'layout_category_id': False,
+                u'name': self.deposito_id.name
+            })]
+            return res
+
+    def _cambiar_order_line(self, tipo, product_id_nuevo):
+        res = {'value': {}}
+        if self.order_line:
+            for line in self.order_line:
+                if line.tipo == tipo:
+                    res['value']['order_line'] = [(1, line.id, {
+                        'product_id': product_id_nuevo.id,
+                        'name': product_id_nuevo.name,
+                        'price_unit': product_id_nuevo.lst_price
+                    })]
+                    return res
         # Se reemplaza por el deposito que se ha
-        self.order_line = [0, False, {
+        res['value']['order_line'] = [(0, False, {
             u'procurement_ids': [],
-            u'tipo': u'deposito',
+            u'tipo': tipo,
             u'route_id': False,
             u'qty_delivered': 0,
-            u'product_id': self.deposito_id.id,
+            u'product_id': product_id_nuevo.id,
             u'product_uom': 1,
             u'sequence': (len(self.order_line) * 10),
             u'customer_lead': 0,
-            u'price_unit': self.deposito_id.list_price,
+            u'price_unit': product_id_nuevo.lst_price,
             u'product_uom_qty': 1,
             u'discount': 0,
             u'state': u'draft',
@@ -127,9 +167,9 @@ class SaleOrder(models.Model):
             u'invoice_status': u'no',
             u'tax_id': [[6, False, [1]]],
             u'layout_category_id': False,
-            u'name': self.deposito_id.name
-        }]
-        return True
+            u'name': product_id_nuevo.name
+        })]
+        return res
 
     @api.multi
     @api.onchange('date_order')
@@ -251,6 +291,6 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-    _name = 'sale.order.line'
+    _inherit = 'sale.order.line'
 
     tipo = fields.Selection(ORDER_LINE_TIPO, default='otros')
