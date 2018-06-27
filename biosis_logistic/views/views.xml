@@ -16,11 +16,10 @@
                 <field name="partner_id" position="after">
                     <field name="actividad"/>
                     <field name="via"/>
-                    <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')]}"/>
-                    <field name="tipo_contenedor_id" attrs="{'invisible': [('modalidad','!=', 'FCL')]}"/>
+                    <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')], 'required': [('via','=','M')]}"/>
+                    <field name="tipo_contenedor_id" attrs="{'invisible': [('modalidad','!=', 'FCL')], 'required': [('modalidad','=','FCL')]}"/>
                     <field name="tipo_contenedor_name" invisible="1"/>
-                    <field name="deposito_id" domain="[('name','like',tipo_contenedor_name)]"
-                           attrs="{'invisible': [('tipo_contenedor_id','=',False)]}"/>
+                    <field name="deposito_id" required="1" attrs="{'invisible': [('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
                     <!--<field name="zona_id" required="1"/>-->

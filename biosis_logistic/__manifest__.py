@@ -29,7 +29,8 @@
         'views/templates.xml',
         # 'data/data_inicial.xml',
         'views/linea_naviera.xml',
-        'views/zona.xml'
+        'views/zona.xml',
+        'views/product_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
