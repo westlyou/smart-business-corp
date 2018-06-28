@@ -10,7 +10,7 @@ class SaleLinea(models.Model):
     name = fields.Char(string=u'Linea', required=True)
     representante_ids = fields.Many2many('res.partner', string='Representante(s)', required=True)
     vacio_ids = fields.Many2many('product.product', string=u'Vacíos')
-    agente_ids = fields.Many2many('product.product', string=u'Agentes portuarios')
+    agente_portuario_ids = fields.Many2many('product.product', string=u'Agentes portuarios')
 
 
 class TipoContenedor(models.Model):

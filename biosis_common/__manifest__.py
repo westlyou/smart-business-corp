@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "biosis_logistic",
+    'name': "BIOSIS COMMONS",
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    'summary': u"""
+        Configuraciones transversales que sirven para otros módulos desarrollados por BIOSIS""",
 
     'description': """
         Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "BIOSIS",
+    'website': "http://www.biosis.com.pe",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -20,13 +19,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale'],
+    'depends': ['base'],
 
     # always loaded
     'data': [
-        'views/views.xml',
-        'views/linea_naviera.xml',
-        'views/product_template.xml',
+        # 'security/ir.model.access.csv',
+        'data/res.lang.csv',
     ],
     # only loaded in demonstration mode
     'demo': [
