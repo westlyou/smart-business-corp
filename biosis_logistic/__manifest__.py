@@ -10,8 +10,8 @@
         Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "BIOSIS",
+    'website': "http://altabpo.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -27,6 +27,7 @@
         'views/views.xml',
         'views/linea_naviera.xml',
         'views/product_template.xml',
+        'data/data_inicial.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

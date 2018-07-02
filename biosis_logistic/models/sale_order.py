@@ -9,13 +9,14 @@ import calendar
 # Permite filtrar resultados acorde a lo que se seleccione
 
 ORDER_LINE_TIPO = (
-    (u'linea_aduanera', u'Linea aduanera'),
-    (u'zona_transporte', u'Zona de transporte'),
-    (u'zona_resguardo', u'Zona de resguardo'),
+    (u'deposito', u'Depósito'),
+    (u'vacio', u'Vacío'),
+    (u'agente_aduana', u'Agente aduana'),
+    (u'agente_portuario', u'Agente portuario'),
+    (u'transporte', u'Transporte'),
+    (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
-    (u'agente_carga', u'Agente de carga'),
-    (u'otros', u'Otros tipos'),
-    (u'deposito', u'Deposito')
+    (u'otros', u'Otros'),
 )
 
 
@@ -106,7 +107,21 @@ class SaleOrder(models.Model):
         if self.deposito_id:
             return self._cambiar_order_line(u'deposito', self.deposito_id)
 
-    @api.onchange('via', 'modalidad', 'tipo_contenedor_id')
+    @api.onchange('agente_portuario_id')
+    def onchange_agente_portuario_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.agente_portuario_id:
+            return self._cambiar_order_line(u'agente_portuario', self.agente_portuario_id)
+
+    @api.onchange('vacio_id')
+    def onchange_vacio_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.vacio_id:
+            return self._cambiar_order_line(u'vacio', self.vacio_id)
+
+    @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_naviera_id')
     def onchange_modalidad(self):
         res = dict(domain=dict())
         if self.modalidad:
@@ -115,7 +130,7 @@ class SaleOrder(models.Model):
                 res['domain'] = dict(
                     deposito_id=[('aereo', '=', True), ('tipo_servicio', '=', 'deposito')],
                     agente_aduana_id=[('aereo', '=', True), ('tipo_servicio', '=', 'agente_aduana')],
-                    transporte_id = [('aereo','=',True),('tipo_servicio','=')]
+                    transporte_id=[('aereo', '=', True), ('tipo_servicio', '=')]
                 )
 
     def _cambiar_order_line(self, tipo, product_id_nuevo):
@@ -124,9 +139,10 @@ class SaleOrder(models.Model):
             for line in self.order_line:
                 if line.tipo == tipo:
                     res['value']['order_line'] = [(1, line.id, {
-                        'product_id': product_id_nuevo.id,
-                        'name': product_id_nuevo.name,
-                        'price_unit': product_id_nuevo.lst_price
+                        u'product_id': product_id_nuevo.id,
+                        u'name': product_id_nuevo.name,
+                        u'price_unit': product_id_nuevo.lst_price,
+                        u'tipo': tipo,
                     })]
                     return res
         # Se reemplaza por el deposito que se ha

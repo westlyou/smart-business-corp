@@ -46,7 +46,4 @@ class ProductTemplate(models.Model):
         res = {'value': {}}
         if self.tipo_servicio in ('agente_portuario', 'vacio'):
             res['value']['maritimo'] = True
-            res['value']['lcl'] = False
-            res['value']['fcl'] = True
-
             return res

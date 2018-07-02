@@ -1,75 +1,21 @@
 <odoo>
     <data>
-        <record id="serv_linea_naviera" model="product.template">
-            <field name="name">Agente portuario</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Agente portuario</field>
-            <field name="default_code">AGNTPORT</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="purchase_line_warn" eval="'no-message'"/>
+        <!-- name = fields.Char(string=u'Linea', required=True)
+    representante_ids = fields.Many2many('res.partner', string='Representante(s)', required=True)
+    vacio_ids = fields.Many2many('product.product', string=u'Vacíos')
+    agente_portuario_ids = fields.Many2many('product.product', string=u'Agentes portuarios')
+     -->
+        <record id="tipo_contenedor_20ST" model="sale.contenedor.tipo">
+            <field name="name">20'ST</field>
         </record>
-
-        <record id="serv_almacen_vacio" model="product.template">
-            <field name="name">Almacén de vacío</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Almacén de vacío</field>
-            <field name="default_code">ALMVAC</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="purchase_line_warn" eval="'no-message'"/>
+        <record id="tipo_contenedor_40ST" model="sale.contenedor.tipo">
+            <field name="name">40'ST</field>
         </record>
-
-        <record id="serv_almacen_ingreso" model="product.template">
-            <field name="name">Almacén de ingreso</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Almacén de ingreso</field>
-            <field name="default_code">ALMING</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="purchase_line_warn" eval="'no-message'"/>
+        <record id="tipo_contenedor_40HC" model="sale.contenedor.tipo">
+            <field name="name">40'HC</field>
         </record>
-
-        <record id="serv_agente_portuario" model="product.template">
-            <field name="name">Agente portuario</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Agencia de aduana</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="default_code">AGNTPORTUARIO</field>
-            <field name="purchase_line_warn" eval="'no-message'"/>
-        </record>
-
-        <record id="serv_transporte" model="product.template">
-            <field name="name">Servicio de transporte</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Servicio de transporte</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="default_code">TRANSPORTE</field>
-            <field name="purchase_line_warn" eval="'no-message'"/>
-        </record>
-
-        <record id="serv_resguardo" model="product.template">
-            <field name="name">Servicio de resguardo</field>
-            <field name="list_price">0.1</field>
-            <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
-            <field name="description_sale">Servicio de resguardo</field>
-            <field name="purchase_ok" eval="False" />
-            <field name="default_code">RESGUARDO</field>
-            <field name="purchase_line_warn" eval="'no-message'"/>
+        <record id="tipo_contenedor_40RF" model="sale.contenedor.tipo">
+            <field name="name">40'RF</field>
         </record>
     </data>
 </odoo>

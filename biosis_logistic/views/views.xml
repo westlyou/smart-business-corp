@@ -13,6 +13,10 @@
                 <xpath expr="//field[@name='pricelist_id']" position="replace">
                 </xpath>
 
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                    <field name="tipo" invisible="1"/>
+                </xpath>
+
                 <field name="partner_id" position="after">
                     <field name="actividad"/>
                     <field name="via"/>
@@ -22,25 +26,14 @@
                     <field name="deposito_id" required="1" attrs="{'invisible': [('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
-                    <!--<field name="zona_id" required="1"/>-->
-                    <!--<button name="generar_order_lines" string="Generar detalle" type="object" colspan="2" default_focus="1"
-                                class="oe_highlight" />-->
                 </field>
 
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="payment_term_id"/>
                     <field name="modalidad_pago_id"/>
                     <field name="linea_id" attrs="{'invisible': [('tipo_contenedor_id','=',False)]}"/>
-                    <!--<field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
-                    <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
-                    <!--<field name="vacio_id" attrs="{'invisible': [('linea_id','=', False)]}"-->
-                    <!--domain="[('linea_ids','=',linea_id)]" required="1"/>-->
-                    <!---->
-                    <!--<field name="agente_aduana_id"/>-->
-                    <!--<field name="transporte_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
-                    <!--domain="[('zona_ids','=',zona_id)]"/>-->
-                    <!--<field name="resguardo_id" attrs="{'invisible': [('zona_id','=', False)]}"-->
-                    <!--domain="[('zona_ids','=',zona_id)]"/>-->
+                    <field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=',False)]}" domain="[('linea_naviera_ids','=',linea_id),('tipo_contenedor_ids','=',tipo_contenedor_id)]"/>
+                    <field name="vacio_id" attrs="{'invisible': [('linea_id','=',False)]}" />
                 </xpath>
 
             </field>
