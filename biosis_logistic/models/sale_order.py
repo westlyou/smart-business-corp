@@ -19,6 +19,17 @@ ORDER_LINE_TIPO = (
     (u'otros', u'Otros'),
 )
 
+TIPO_SERVICIO_DICT = {
+    u'deposito': u'Depósito',
+    u'vacio': u'Vacío',
+    u'agente_aduana': u'Agente aduana',
+    u'agente_portuario': u'Agente portuario',
+    u'transporte': u'Transporte',
+    u'resguardo': u'Resguardo',
+    u'cuadrilla': u'Cuadrilla',
+    u'otros': u'Otros',
+}
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -135,37 +146,60 @@ class SaleOrder(models.Model):
 
     def _cambiar_order_line(self, tipo, product_id_nuevo):
         res = {'value': {}}
+        order_lines = []
+        encontrado = False
+        desc = TIPO_SERVICIO_DICT[product_id_nuevo.tipo_servicio]
         if self.order_line:
+            i = 0
             for line in self.order_line:
-                if line.tipo == tipo:
-                    res['value']['order_line'] = [(1, line.id, {
-                        u'product_id': product_id_nuevo.id,
-                        u'name': product_id_nuevo.name,
-                        u'price_unit': product_id_nuevo.lst_price,
-                        u'tipo': tipo,
-                    })]
-                    return res
+                bandera = line.tipo == tipo
+                if bandera:
+                    encontrado = True
+
+                order_lines.append((0, False, {
+                    u'procurement_ids': [],
+                    u'tipo': bandera and tipo or line.tipo,
+                    u'route_id': False,
+                    u'qty_delivered': 0,
+                    u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
+                    u'product_uom': 1,
+                    u'sequence': line.sequence,
+                    u'customer_lead': 0,
+                    u'price_unit': bandera and product_id_nuevo.lst_price or line.product_id.lst_price,
+                    u'product_uom_qty': 1,
+                    u'discount': 0,
+                    u'state': u'draft',
+                    u'qty_delivered_updateable': True,
+                    u'analytic_tag_ids': [],
+                    u'invoice_status': u'no',
+                    u'tax_id': [[6, False, [1]]],
+                    u'layout_category_id': False,
+                    u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
+                }))
+        if not encontrado:
+            order_lines.append((0, False, {
+                u'procurement_ids': [],
+                u'tipo': tipo,
+                u'route_id': False,
+                u'qty_delivered': 0,
+                u'product_id': product_id_nuevo.id,
+                u'product_uom': 1,
+                u'sequence': self.order_line and len(self.order_line) * 10 or 0,
+                u'customer_lead': 0,
+                u'price_unit': product_id_nuevo.lst_price,
+                u'product_uom_qty': 1,
+                u'discount': 0,
+                u'state': u'draft',
+                u'qty_delivered_updateable': True,
+                u'analytic_tag_ids': [],
+                u'invoice_status': u'no',
+                u'tax_id': [[6, False, [1]]],
+                u'layout_category_id': False,
+                u'name': '%s - %s' % (desc, product_id_nuevo.name)
+            }))
+
         # Se reemplaza por el deposito que se ha
-        res['value']['order_line'] = [(0, False, {
-            u'procurement_ids': [],
-            u'tipo': tipo,
-            u'route_id': False,
-            u'qty_delivered': 0,
-            u'product_id': product_id_nuevo.id,
-            u'product_uom': 1,
-            u'sequence': (len(self.order_line) * 10),
-            u'customer_lead': 0,
-            u'price_unit': product_id_nuevo.lst_price,
-            u'product_uom_qty': 1,
-            u'discount': 0,
-            u'state': u'draft',
-            u'qty_delivered_updateable': True,
-            u'analytic_tag_ids': [],
-            u'invoice_status': u'no',
-            u'tax_id': [[6, False, [1]]],
-            u'layout_category_id': False,
-            u'name': product_id_nuevo.name
-        })]
+        res['value']['order_line'] = order_lines
         return res
 
     @api.multi
@@ -191,100 +225,6 @@ class SaleOrder(models.Model):
             self.valor_tipo_cambio = 0.0
 
             # def get_tc_web(self, mes, anho, dia):
-
-    @api.multi
-    def generar_order_lines(self):
-        order_lines = []
-        line_vals = {
-            'product_id': False,
-            'name': False,
-            'product_uom_qty': 1,
-            'price_unit': 0.0,
-            'tax_id': False,
-            'product_uom': False
-        }
-
-        order_id = self.id
-        product_obj = self.env['product.product']
-        line_obj = self.env['sale.order.line']
-
-        portuario = product_obj.search([('default_code', '=', 'AGNTPORTUARIO')])
-        vacio = product_obj.search([('default_code', '=', 'ALMVAC')])
-        ingreso = product_obj.search([('default_code', '=', 'ALMING')])
-        aduana = product_obj.search([('default_code', '=', 'AGNTADUANERO')])
-        transporte = product_obj.search([('default_code', '=', 'TRANSP')])
-        resguardo = product_obj.search([('default_code', '=', 'RESG')])
-
-        unidad = self.env['product.uom'].browse([1])
-
-        line_portuario = line_obj.create({
-            'product_id': portuario.id,
-            'name': self.agente_portuario_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        line_vacio = line_obj.create({
-            'product_id': vacio.id,
-            'name': self.vacio_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        line_ingreso = line_obj.create({
-            'product_id': ingreso.id,
-            'name': self.deposito_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        line_aduana = line_obj.create({
-            'product_id': aduana.id,
-            'name': self.agente_aduana_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        line_transporte = line_obj.create({
-            'product_id': transporte.id,
-            'name': self.transporte_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        line_resguardo = line_obj.create({
-            'product_id': resguardo.id,
-            'name': self.resguardo_id.name,
-            'product_uom_qty': 1,
-            'product_uom': unidad.id,
-            'tax_id': False,
-            'price_unit': 0.0,
-            'order_id': order_id
-        })
-
-        order_lines.append(line_portuario.id)
-        order_lines.append(line_vacio.id)
-        order_lines.append(line_ingreso.id)
-        order_lines.append(line_aduana.id)
-        order_lines.append(line_transporte.id)
-        order_lines.append(line_resguardo.id)
-
-        self.order_line = [(6, 0, order_lines)]
 
 
 class SaleOrderLine(models.Model):
