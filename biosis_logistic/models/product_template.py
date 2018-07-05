@@ -10,10 +10,11 @@ TIPO_SERVICIO = (
     (u'vacio', u'Vacío'),
     (u'agente_aduana', u'Agente aduana'),
     (u'agente_portuario', u'Agente portuario'),
+    (u'agente_carga', u'Agente de carga'),
     (u'transporte', u'Transporte'),
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
-    (u'otros', u'Otros')
+    (u'otros', u'Otros'),
 )
 
 
@@ -47,3 +48,5 @@ class ProductTemplate(models.Model):
         if self.tipo_servicio in ('agente_portuario', 'vacio'):
             res['value']['maritimo'] = True
             return res
+        if self.tipo_servicio in ('agente_carga',):
+            res['value']['maritimo'] = True

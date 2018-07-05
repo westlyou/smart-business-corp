@@ -16,6 +16,7 @@ ORDER_LINE_TIPO = (
     (u'transporte', u'Transporte'),
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
+    (u'agente_carga', u'Agente de carga'),
     (u'otros', u'Otros'),
 )
 
@@ -28,6 +29,7 @@ TIPO_SERVICIO_DICT = {
     u'resguardo': u'Resguardo',
     u'cuadrilla': u'Cuadrilla',
     u'otros': u'Otros',
+    u'agente_carga': u'Agente de carga',
 }
 
 
@@ -53,6 +55,7 @@ class SaleOrder(models.Model):
     tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('product.product', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('product.product', string=u'Agente Portuario')
+    agente_carga_id = fields.Many2one('product.product', string=u'Agente de carga')
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string=u'Tipo de contenedor')
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
@@ -144,25 +147,32 @@ class SaleOrder(models.Model):
             return self._cambiar_order_line(u'transporte', self.transporte_id)
 
     @api.onchange('resguardo_id')
-    def onchange_agente_portuario_id(self):
+    def onchange_resguardo_id(self):
         res = dict()
         res['value'] = dict()
         if self.transporte_id:
             return self._cambiar_order_line(u'resguardo', self.resguardo_id)
 
     @api.onchange('cuadrilla_id')
-    def onchange_agente_portuario_id(self):
+    def onchange_cuadrilla_id(self):
         res = dict()
         res['value'] = dict()
         if self.transporte_id:
             return self._cambiar_order_line(u'cuadrilla', self.cuadrilla_id)
 
     @api.onchange('agente_aduana_id')
-    def onchange_agente_portuario_id(self):
+    def onchange_agente_aduana_id(self):
         res = dict()
         res['value'] = dict()
         if self.transporte_id:
             return self._cambiar_order_line(u'agente_aduana', self.agente_aduana_id)
+
+    @api.onchange('agente_carga_id')
+    def onchange_agente_carga_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.agente_carga_id:
+            return self._cambiar_order_line(u'agente_carga', self.agente_carga_id)
 
     @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_naviera_id')
     def onchange_modalidad(self):
