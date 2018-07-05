@@ -37,7 +37,7 @@
                     <field name="via"/>
                     <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')], 'required': [('via','=','M')]}"/>
                     <field name="tipo_contenedor_id"
-                           attrs="{'invisible': [('modalidad','!=', 'FCL')], 'required': [('modalidad','=','FCL')]}"/>
+                           attrs="{'invisible': ['|',('modalidad','!=', 'FCL'),('via','!=','M')], 'required': [('modalidad','=','FCL')]}"/>
                     <field name="tipo_contenedor_name" invisible="1"/>
                     <field name="deposito_id" domain="[('tipo_servicio','=','deposito')]" required="1"
                            attrs="{'invisible': [('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
@@ -48,7 +48,7 @@
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="payment_term_id"/>
                     <field name="modalidad_pago_id"/>
-                    <field name="linea_id" attrs="{'invisible': [('tipo_contenedor_id','=',False)]}"/>
+                    <field name="linea_id" attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=',False)]}"
                            domain="[('tipo_servicio','=','agente_portuario'),('linea_naviera_ids','=',linea_id),('tipo_contenedor_ids','=',tipo_contenedor_id)]"/>
                     <field name="vacio_id" attrs="{'invisible': [('linea_id','=',False)]}"
