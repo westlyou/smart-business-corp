@@ -16,6 +16,7 @@ ORDER_LINE_TIPO = (
     (u'transporte', u'Transporte'),
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
+    (u'agente_carga', u'Agente de carga'),
     (u'otros', u'Otros'),
 )
 
@@ -28,6 +29,7 @@ TIPO_SERVICIO_DICT = {
     u'resguardo': u'Resguardo',
     u'cuadrilla': u'Cuadrilla',
     u'otros': u'Otros',
+    u'agente_carga': u'Agente de carga',
 }
 
 
@@ -53,13 +55,18 @@ class SaleOrder(models.Model):
     tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('product.product', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('product.product', string=u'Agente Portuario')
+    agente_carga_id = fields.Many2one('product.product', string=u'Agente de carga')
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string=u'Tipo de contenedor')
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
     modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('product.product', string='Transporte')
     resguardo_id = fields.Many2one('product.product', string='Resguardo')
+    cuadrilla_id = fields.Many2one('product.product', string='Cuadrilla')
     zona_id = fields.Many2one('sale.zona', string='Zona')
+    total_sin_ganancia = fields.Float('Precio inicial')
+    ganancia = fields.Float('Ganancia')
+    total_con_ganancia = fields.Float('Precio final')
 
     def mapear_tc(self, mes, anio):
         web = urllib2.urlopen(
@@ -132,6 +139,41 @@ class SaleOrder(models.Model):
         if self.vacio_id:
             return self._cambiar_order_line(u'vacio', self.vacio_id)
 
+    @api.onchange('transporte_id')
+    def onchange_agente_portuario_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.transporte_id:
+            return self._cambiar_order_line(u'transporte', self.transporte_id)
+
+    @api.onchange('resguardo_id')
+    def onchange_resguardo_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.transporte_id:
+            return self._cambiar_order_line(u'resguardo', self.resguardo_id)
+
+    @api.onchange('cuadrilla_id')
+    def onchange_cuadrilla_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.transporte_id:
+            return self._cambiar_order_line(u'cuadrilla', self.cuadrilla_id)
+
+    @api.onchange('agente_aduana_id')
+    def onchange_agente_aduana_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.transporte_id:
+            return self._cambiar_order_line(u'agente_aduana', self.agente_aduana_id)
+
+    @api.onchange('agente_carga_id')
+    def onchange_agente_carga_id(self):
+        res = dict()
+        res['value'] = dict()
+        if self.agente_carga_id:
+            return self._cambiar_order_line(u'agente_carga', self.agente_carga_id)
+
     @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_naviera_id')
     def onchange_modalidad(self):
         res = dict(domain=dict())
@@ -143,6 +185,45 @@ class SaleOrder(models.Model):
                     agente_aduana_id=[('aereo', '=', True), ('tipo_servicio', '=', 'agente_aduana')],
                     transporte_id=[('aereo', '=', True), ('tipo_servicio', '=')]
                 )
+
+    @api.onchange('total_sin_ganancia')
+    def onchange_amount_total(self):
+        res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
+        return res
+
+    @api.onchange('total_con_ganancia')
+    def onchange_total_con_ganancia(self):
+        res = dict(value=dict(ganancia=(self.total_con_ganancia - self.total_sin_ganancia)))
+        return res
+
+    @api.onchange('ganancia')
+    def onchange_ganancia(self):
+        res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
+        return res
+
+    @api.depends('order_line.price_total')
+    def _amount_all(self):
+        """
+        Compute the total amounts of the SO.
+        """
+        for order in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in order.order_line:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty,
+                                                    product=line.product_id, partner=order.partner_shipping_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+            order.update({
+                'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
+                'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
+                'amount_total': amount_untaxed + amount_tax,
+                'total_sin_ganancia': amount_untaxed + amount_tax,
+            })
 
     def _cambiar_order_line(self, tipo, product_id_nuevo):
         res = {'value': {}}

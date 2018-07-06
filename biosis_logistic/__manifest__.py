@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "biosis_logistic",
+    'name': u"SBC - Cotización y Logística",
 
-    'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+    'summary': u"""
+        Módulo a medida para el proceso de cotización de SBC""",
 
-    'description': """
-        Long description of module's purpose
+    'description': u"""
+        Módulo que permite agregar las siguientes características:
+        
+        - Datos de líneas navieras
+        - Datos de tipos de contenedores
+        - Ayuda al momento de generar una cotización para el cliente
     """,
 
-    'author': "BIOSIS",
+    'author': "ALTA BPO",
     'website': "http://altabpo.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Uncategorized',
+    'category': 'Sales',
     'version': '0.1',
 
     # any module necessary for this one to work correctly
@@ -27,6 +30,7 @@
         'views/views.xml',
         'views/linea_naviera.xml',
         'views/product_template.xml',
+        'views/tipo_contenedor.xml',
         'data/data_inicial.xml',
     ],
     # only loaded in demonstration mode

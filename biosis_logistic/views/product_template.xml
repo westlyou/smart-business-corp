@@ -10,14 +10,14 @@
                         <group name="logistica">
                             <group name="cabeceras">
                                 <field name="tipo_servicio"/>
-                                <field name="aereo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla','agente_portuario','vacio'])]}" />
+                                <field name="aereo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla','agente_portuario','vacio','agente_carga'])]}" />
                                 <field name="maritimo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla'])]}" />
                             </group>
                             <group string="Opciones vía marítima" name="opciones_maritima" attrs="{'invisible':[('maritimo', '=', False)]}">
                                 <field name="lcl" attrs="{'invisible':[('tipo_servicio', 'in', ['agente_aduana','vacio'])]}" />
-                                <field name="fcl" />
-                                <field name="tipo_contenedor_ids" widget="many2many_checkboxes" attrs="{'invisible':[('fcl', '=', False)]}"/>
-                                <field name="linea_naviera_ids" attrs="{'invisible':[('tipo_servicio', 'not in', ['vacio','agente_portuario'])]}" widget="many2many_tags" />
+                                <field name="fcl" attrs="{'invisible': [('tipo_servicio','in',['agente_carga',])]}" />
+                                <field name="tipo_contenedor_ids" widget="many2many_checkboxes" attrs="{'invisible':['|',('fcl', '=', False),('tipo_servicio','in',['agente_carga',])]}"/>
+                                <field name="linea_naviera_ids" attrs="{'invisible':[('tipo_servicio', 'not in', ['vacio','agente_portuario']),('tipo_servicio','in',['agente_carga',])]}" widget="many2many_tags" />
                             </group>
                         </group>
                     </page>
