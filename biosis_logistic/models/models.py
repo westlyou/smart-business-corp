@@ -18,4 +18,11 @@ class TipoContenedor(models.Model):
     _name = 'sale.contenedor.tipo'
     _description = 'Tipo de contenedor'
 
-    name = fields.Char('Nombre')
+    name = fields.Char(u'Tipo de contenedor')
+
+
+class ModalidadPago(models.Model):
+    _name = 'sale.modalidad_pago'
+    _description = 'Modalidad de pago'
+
+    name = fields.Char(u'Modalidad de pago')
