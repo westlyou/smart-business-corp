@@ -54,13 +54,15 @@
                            attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id" attrs="{'invisible': [('linea_id','=',False)]}"
                            domain="[('tipo_servicio','=','agente_portuario'),('linea_naviera_ids','=',linea_id),('tipo_contenedor_ids','=',tipo_contenedor_id)]"/>
-                    <field name="vacio_id" attrs="{'invisible': [('linea_id','=',False)]}"
-                           domain="[('tipo_servicio','=','vacio')]"/>
+
                     <field name="agente_aduana_id" domain="[('tipo_servicio','=','agente_aduana')]"
                            attrs="{'invisible': [('modalidad','!=','FCL')]}"/>
+                    <field name="vacio_id" attrs="{'invisible': [('linea_id','=',False)]}"
+                           domain="[('tipo_servicio','=','vacio'),('linea_naviera_ids','=',linea_id)]" />
                     <field name="agente_carga_id" domain="[('tipo_servicio','=','agente_carga')]"
                            attrs="{'invisible': ['|',('modalidad','!=','LCL'),('via','!=','M')]}"/>
-                    <field name="agente_portuario_id" domain="[('tipo_servicio','=','agente_portuario')]"/>
+                    <field name="agente_portuario_id"
+                           domain="['&amp;',('tipo_servicio','=','agente_portuario'),'&amp;',('via','=','M'),'|',('modalidad','=','LCL'),'&amp;',('tipo_contenedor_id','=',tipo_contenedor_id),('linea_naviera_ids','=',linea_id)]"/>
                     <field name="transporte_id" domain="[('tipo_servicio','=','transporte')]"/>
                     <field name="cuadrilla_id" domain="[('tipo_servicio','=','cuadrilla')]"/>
                     <field name="resguardo_id" domain="[('tipo_servicio','=','resguardo')]"/>
