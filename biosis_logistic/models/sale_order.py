@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string=u'Tipo de contenedor')
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
-    modalidad_pago_id = fields.Many2one('sale.modalidad_pago', string='Modalidad de pago')
+    modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('product.product', string='Transporte')
     resguardo_id = fields.Many2one('product.product', string='Resguardo')
     cuadrilla_id = fields.Many2one('product.product', string='Cuadrilla')

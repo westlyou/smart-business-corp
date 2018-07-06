@@ -22,7 +22,7 @@ class TipoContenedor(models.Model):
 
 
 class ModalidadPago(models.Model):
-    _name = 'sale.modalidad_pago'
+    _name = 'sale.pago.modalidad'
     _description = 'Modalidad de pago'
 
     name = fields.Char(u'Modalidad de pago')
