@@ -9,8 +9,9 @@ class SaleLinea(models.Model):
 
     name = fields.Char(string=u'Linea', required=True)
     representante_ids = fields.Many2many('res.partner', string='Representante(s)', required=True)
-    vacio_ids = fields.Many2many('product.template', string=u'Vacíos')
-    agente_portuario_ids = fields.Many2many('product.template', string=u'Agentes portuarios')
+    vacio_ids = fields.Many2many('product.template', string=u'Vacíos', domain=[('tipo_servicio', '=', 'vacio')])
+    agente_portuario_ids = fields.Many2many('product.template', string=u'Agentes portuarios',
+                                            domain=[('tipo_servicio', '=', 'agente_portuario')])
 
 
 class TipoContenedor(models.Model):
@@ -18,11 +19,3 @@ class TipoContenedor(models.Model):
     _description = 'Tipo de contenedor'
 
     name = fields.Char('Nombre')
-
-
-# class Zona(models.Model):
-#     _name = 'sale.zona'
-#
-#     name = fields.Char('Zona')
-#     resguardo_ids = fields.Many2many('sale.resguardo', string='Empresas de resguardo')
-#     transporte_ids = fields.Many2many('sale.transporte', string='Empresas de transporte')
