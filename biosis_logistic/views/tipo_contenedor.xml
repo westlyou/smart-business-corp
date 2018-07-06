@@ -16,7 +16,7 @@
 
         <record id="action_tipo_contenedor" model="ir.actions.act_window">
             <field name="name">Tipos de contenedor</field>
-            <field name="res_model">sale.contendor.tipo</field>
+            <field name="res_model">sale.contenedor.tipo</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
