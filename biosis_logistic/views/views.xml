@@ -39,7 +39,9 @@
                     <field name="tipo_contenedor_id"
                            attrs="{'invisible': ['|',('modalidad','!=', 'FCL'),('via','!=','M')], 'required': [('modalidad','=','FCL')]}"/>
                     <field name="tipo_contenedor_name" invisible="1"/>
-                    <field name="deposito_id" domain="[('tipo_servicio','=','deposito')]" required="1"
+                    <field name="deposito_id"
+                           domain="['&amp;',('tipo_servicio','=','deposito'),'|',('modalidad','!=','FCL'),'&amp;',('modalidad','=','FCL'),('tipo_contenedor_id','=',tipo_contenedor_id)]"
+                           required="1"
                            attrs="{'invisible': [('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>

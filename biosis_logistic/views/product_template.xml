@@ -17,7 +17,7 @@
                                 <field name="lcl" attrs="{'invisible':[('tipo_servicio', 'in', ['agente_aduana','vacio'])]}" />
                                 <field name="fcl" attrs="{'invisible': [('tipo_servicio','in',['agente_carga',])]}" />
                                 <field name="tipo_contenedor_ids" widget="many2many_checkboxes" attrs="{'invisible':['|',('fcl', '=', False),('tipo_servicio','in',['agente_carga',])]}"/>
-                                <field name="linea_naviera_ids" attrs="{'invisible':[('tipo_servicio', 'not in', ['vacio','agente_portuario']),('tipo_servicio','in',['agente_carga',])]}" widget="many2many_tags" />
+                                <field name="linea_naviera_ids" attrs="{'invisible':['|',('tipo_servicio', 'not in', ['vacio','agente_portuario']),('tipo_servicio','in',['agente_carga','deposito'])]}" widget="many2many_tags" />
                             </group>
                         </group>
                     </page>
