@@ -31,7 +31,7 @@
         <menuitem name="Tipos de contenedor"
                   id="menu_tipos_contenedor"
                   parent="root_logistica"
-                  action="action_linea_naviera"
+                  action="action_tipo_contenedor"
                   sequence="90"/>
     </data>
 </odoo>
