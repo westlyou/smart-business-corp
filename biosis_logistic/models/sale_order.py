@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+
 from odoo import models, fields, api, _
 from odoo.tools import float_is_zero, float_compare
 from odoo.exceptions import UserError, ValidationError
@@ -7,6 +9,7 @@ from datetime import datetime, date, timedelta
 import calendar
 
 # Permite filtrar resultados acorde a lo que se seleccione
+_logger = logging.getLogger(__name__)
 
 ORDER_LINE_TIPO = (
     (u'deposito', u'Depósito'),
@@ -140,7 +143,7 @@ class SaleOrder(models.Model):
             return self._cambiar_order_line(u'vacio', self.vacio_id)
 
     @api.onchange('transporte_id')
-    def onchange_agente_portuario_id(self):
+    def onchange_transporte_id(self):
         res = dict()
         res['value'] = dict()
         if self.transporte_id:
@@ -150,21 +153,21 @@ class SaleOrder(models.Model):
     def onchange_resguardo_id(self):
         res = dict()
         res['value'] = dict()
-        if self.transporte_id:
+        if self.resguardo_id:
             return self._cambiar_order_line(u'resguardo', self.resguardo_id)
 
     @api.onchange('cuadrilla_id')
     def onchange_cuadrilla_id(self):
         res = dict()
         res['value'] = dict()
-        if self.transporte_id:
+        if self.cuadrilla_id:
             return self._cambiar_order_line(u'cuadrilla', self.cuadrilla_id)
 
     @api.onchange('agente_aduana_id')
     def onchange_agente_aduana_id(self):
         res = dict()
         res['value'] = dict()
-        if self.transporte_id:
+        if self.agente_aduana_id:
             return self._cambiar_order_line(u'agente_aduana', self.agente_aduana_id)
 
     @api.onchange('agente_carga_id')
@@ -174,7 +177,7 @@ class SaleOrder(models.Model):
         if self.agente_carga_id:
             return self._cambiar_order_line(u'agente_carga', self.agente_carga_id)
 
-    @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_naviera_id')
+    @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_id')
     def onchange_modalidad(self):
         res = dict(domain=dict())
 
@@ -182,21 +185,31 @@ class SaleOrder(models.Model):
         # aplica para tipo aereo
         if self.via == 'M':
             if self.modalidad == 'FCL':
-                if self.tipo_contenedor_id != False and self.linea_id != False:
-                    res['domain']['agente_portuario_id'] = [('tipo_servicio', '=', 'agente_portuario'),
-                                                            ('maritimo', '=', True),
-                                                            ('fcl', '=', True),
-                                                            ('tipo_contenedor_ids', '=', self.tipo_contenedor_id.id),
-                                                            ('linea_naviera_ids', '=', self.linea_id.id)]
-                    res['domain']['vacio'] = [('tipo_servicio', '=', 'vacio'),
-                                              ('maritimo', '=', True),
-                                              ('fcl', '=', True),
-                                              ('tipo_contenedor_ids', '=', self.tipo_contenedor_id.id),
-                                              ('linea_naviera_ids', '=', self.linea_id.id)]
-                res['domain']['agente_aduana_id'] = [('tipo_servicio', '=', 'agente_aduana'), ('maritimo', '=', True),
+                if self.tipo_contenedor_id is not False:
+                    if self.linea_id is not False:
+                        res['domain']['agente_portuario_id'] = ['&', '&', '&', '&',
+                                                                ('tipo_servicio', '=', 'agente_portuario'),
+                                                                ('maritimo', '=', True),
+                                                                ('fcl', '=', True),
+                                                                ('tipo_contenedor_ids', 'in',
+                                                                 self.tipo_contenedor_id.ids),
+                                                                ('linea_naviera_ids', 'in', self.linea_id.ids)]
+                        res['domain']['vacio_id'] = ['&', '&', '&', '&',
+                                                     ('tipo_servicio', '=', 'vacio'),
+                                                     ('maritimo', '=', True),
+                                                     ('fcl', '=', True),
+                                                     ('tipo_contenedor_ids', 'in', self.tipo_contenedor_id.ids),
+                                                     ('linea_naviera_ids', 'in', self.linea_id.ids)]
+                    res['domain']['deposito_id'] = ['&', '&', '&',
+                                                    ('tipo_servicio', '=', 'deposito'),
+                                                    ('maritimo', '=', True),
+                                                    ('fcl', '=', True),
+                                                    ('tipo_contenedor_ids', 'in', self.tipo_contenedor_id.ids)]
+                res['domain']['agente_aduana_id'] = ['&', '&',
+                                                     ('tipo_servicio', '=', 'agente_aduana'),
+                                                     ('maritimo', '=', True),
                                                      ('fcl', '=', True)]
-                res['domain']['deposito_id'] = [('tipo_servicio', '=', 'agente_aduana'), ('maritimo', '=', True),
-                                                ('fcl', '=', True)]
+
             if self.modalidad == 'LCL':
                 res['domain']['agente_portuario_id'] = [('tipo_servicio', '=', 'agente_portuario'),
                                                         ('lcl', '=', True)]
@@ -208,6 +221,7 @@ class SaleOrder(models.Model):
             res['domain']['deposito_id'] = [('tipo_servicio', '=', 'deposito'),
                                             ('aereo', '=', True)]
         if res['domain']:
+            _logger.info('Resultado: %s' % res)
             return res
 
     @api.onchange('total_sin_ganancia')
@@ -270,7 +284,7 @@ class SaleOrder(models.Model):
                     u'product_uom': 1,
                     u'sequence': line.sequence,
                     u'customer_lead': 0,
-                    u'price_unit': bandera and product_id_nuevo.lst_price or line.product_id.lst_price,
+                    u'price_unit': bandera and product_id_nuevo.lst_price or line.price_unit,
                     u'product_uom_qty': 1,
                     u'discount': 0,
                     u'state': u'draft',
