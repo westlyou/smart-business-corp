@@ -177,15 +177,38 @@ class SaleOrder(models.Model):
     @api.onchange('via', 'modalidad', 'tipo_contenedor_id', 'linea_naviera_id')
     def onchange_modalidad(self):
         res = dict(domain=dict())
+
         # if self.modalidad:
         # aplica para tipo aereo
+        if self.via == 'M':
+            if self.modalidad == 'FCL':
+                if self.tipo_contenedor_id != False and self.linea_id != False:
+                    res['domain']['agente_portuario_id'] = [('tipo_servicio', '=', 'agente_portuario'),
+                                                            ('maritimo', '=', True),
+                                                            ('fcl', '=', True),
+                                                            ('tipo_contenedor_ids', '=', self.tipo_contenedor_id.id),
+                                                            ('linea_naviera_ids', '=', self.linea_id.id)]
+                    res['domain']['vacio'] = [('tipo_servicio', '=', 'vacio'),
+                                              ('maritimo', '=', True),
+                                              ('fcl', '=', True),
+                                              ('tipo_contenedor_ids', '=', self.tipo_contenedor_id.id),
+                                              ('linea_naviera_ids', '=', self.linea_id.id)]
+                res['domain']['agente_aduana_id'] = [('tipo_servicio', '=', 'agente_aduana'), ('maritimo', '=', True),
+                                                     ('fcl', '=', True)]
+                res['domain']['deposito_id'] = [('tipo_servicio', '=', 'agente_aduana'), ('maritimo', '=', True),
+                                                ('fcl', '=', True)]
+            if self.modalidad == 'LCL':
+                res['domain']['agente_portuario_id'] = [('tipo_servicio', '=', 'agente_portuario'),
+                                                        ('lcl', '=', True)]
+                res['domain']['deposito_id'] = [('tipo_servicio', '=', 'deposito'),
+                                                ('lcl', '=', True)]
         if self.via == 'A':
-            res['domain'] = dict(
-                deposito_id=[('aereo', '=', True), ('tipo_servicio', '=', 'deposito')],
-                agente_aduana_id=[('aereo', '=', True), ('tipo_servicio', '=', 'agente_aduana')],
-                transporte_id=[('aereo', '=', True), ('tipo_servicio', '=')]
-            )
-
+            res['domain']['agente_aduana_id'] = [('tipo_servicio', '=', 'agente_aduana'),
+                                                 ('aereo', '=', True)]
+            res['domain']['deposito_id'] = [('tipo_servicio', '=', 'deposito'),
+                                            ('aereo', '=', True)]
+        if res['domain']:
+            return res
 
     @api.onchange('total_sin_ganancia')
     def onchange_amount_total(self):
