@@ -39,6 +39,30 @@ TIPO_SERVICIO_DICT = {
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    @api.depends('order_line.price_total')
+    def _amount_all(self):
+        """
+        Compute the total amounts of the SO.
+        """
+        for order in self:
+            amount_untaxed = amount_tax = 0.0
+            for line in order.order_line:
+                amount_untaxed += line.price_subtotal
+                # FORWARDPORT UP TO 10.0
+                if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty,
+                                                    product=line.product_id, partner=order.partner_shipping_id)
+                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
+                else:
+                    amount_tax += line.price_tax
+            order.update({
+                'total_sin_ganancia': amount_untaxed,
+                'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
+                'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
+                'amount_total': amount_untaxed + amount_tax
+            })
+
     via = fields.Selection([
         ('A', u'Aéreo'),
         ('M', u'Marítimo')
@@ -52,6 +76,7 @@ class SaleOrder(models.Model):
         ('LCL', u'Less Container Load')
     ], string=u'Tipo', required=True, default="FCL")
 
+    referencia_sbc = fields.Char('Referencia SBC')
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
     deposito_id = fields.Many2one('product.product', string=u'Depósito')
     vacio_id = fields.Many2one('product.product', string=u'Vacio')
@@ -70,6 +95,17 @@ class SaleOrder(models.Model):
     total_sin_ganancia = fields.Float('Precio inicial')
     ganancia = fields.Float('Ganancia')
     total_con_ganancia = fields.Float('Precio final')
+
+    @api.multi
+    def action_confirm(self):
+        ret = super(SaleOrder, self).action_confirm()
+        if self.actividad == 'E':
+            secuencia = self.env['ir.sequence'].search([('code', '=', 'sbc.referencia.exportacion')], limit=1)
+        else:
+            secuencia = self.env['ir.sequence'].search([('code', '=', 'sbc.referencia.importacion')], limit=1)
+        if secuencia.exists():
+            self.write({u'referencia_sbc': secuencia.next_by_id()})
+        return ret
 
     def mapear_tc(self, mes, anio):
         web = urllib2.urlopen(
@@ -239,30 +275,6 @@ class SaleOrder(models.Model):
         res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
         return res
 
-    @api.depends('order_line.price_total')
-    def _amount_all(self):
-        """
-        Compute the total amounts of the SO.
-        """
-        for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.order_line:
-                amount_untaxed += line.price_subtotal
-                # FORWARDPORT UP TO 10.0
-                if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty,
-                                                    product=line.product_id, partner=order.partner_shipping_id)
-                    amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
-                else:
-                    amount_tax += line.price_tax
-            order.update({
-                'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
-                'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
-                'amount_total': amount_untaxed + amount_tax,
-                'total_sin_ganancia': amount_untaxed + amount_tax,
-            })
-
     def _cambiar_order_line(self, tipo, product_id_nuevo):
         res = {'value': {}}
         order_lines = []
@@ -274,6 +286,16 @@ class SaleOrder(models.Model):
                 bandera = line.tipo == tipo
                 if bandera:
                     encontrado = True
+
+                    # line.update({
+                    #     u'tipo': tipo,
+                    #     u'product_id': product_id_nuevo.id,
+                    #     u'sequence': line.sequence,
+                    #     u'price_unit': product_id_nuevo.lst_price,
+                    #     u'name': '%s - %s' % (desc, product_id_nuevo.name)
+                    # })
+                    #
+                    # return True
 
                 order_lines.append((0, False, {
                     u'procurement_ids': [],
@@ -296,6 +318,18 @@ class SaleOrder(models.Model):
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
                 }))
         if not encontrado:
+            # sale_line = self.env['sale.order.line'].create({
+            #     u'sequence': self.order_line and len(self.order_line) * 10 or 0,
+            #     u'product_id': product_id_nuevo.id,
+            #     u'tipo': tipo,
+            #     u'price_unit': product_id_nuevo.lst_price,
+            #     u'order_id': self.id,
+            #     u'product_uom_qty': 1,
+            #     u'product_uom': 1,
+            #     u'name': '%s - %s' % (desc, product_id_nuevo.name)
+            # })
+            #
+            # self.order_line.append(sale_line)
             order_lines.append((0, False, {
                 u'procurement_ids': [],
                 u'tipo': tipo,
@@ -317,8 +351,9 @@ class SaleOrder(models.Model):
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
 
-        # Se reemplaza por el deposito que se ha
+            # Se reemplaza por el deposito que se ha
         res['value']['order_line'] = order_lines
+        self._amount_all()
         return res
 
     @api.multi

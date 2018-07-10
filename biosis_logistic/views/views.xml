@@ -7,6 +7,9 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <field name="partner_id" position="before">
+                    <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
+                </field>
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
                 </xpath>

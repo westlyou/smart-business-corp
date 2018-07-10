@@ -25,6 +25,7 @@
     'data': [
         # 'security/ir.model.access.csv',
         'data/res.lang.csv',
+        'views/ir_sequence.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
