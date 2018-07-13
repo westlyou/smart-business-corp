@@ -32,6 +32,8 @@
         'views/product_template.xml',
         'views/tipo_contenedor.xml',
         'data/data_inicial.xml',
+        'data/ir_sequence.xml',
+        'security/ir.model.access.csv',
     ],
     # only loaded in demonstration mode
     'demo': [

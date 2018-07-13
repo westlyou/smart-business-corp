@@ -5,10 +5,11 @@
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
             <field name="priority">5</field>
-            <field name="inherit_id" ref="sale.view_quotation_tree" />
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
             <field name="arch" type="xml">
+
                 <field name="state" position="before">
-                    <field name="referencia_sbc" />
+                    <field name="referencia_sbc"/>
                 </field>
             </field>
         </record>
@@ -19,9 +20,6 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="before">
-                    <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
-                </field>
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
                 </xpath>
@@ -32,22 +30,24 @@
                     <field name="tipo" invisible="1"/>
                 </xpath>
 
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="string">Producto / Servicio</attribute>
+                </xpath>
+
+                <xpath expr="//notebook/page[1]" position="attributes">
+                    <attribute name="string">Cotización Flat</attribute>
+                </xpath>
+
                 <xpath expr="//notebook" position="before">
                     <group>
-                        <p>
-                            <field name="total_sin_ganancia" nolabel="1"/>
-                        </p>
-                        <p>+</p>
-                        <field name="ganancia" nolabel="1"/>
-                        <p>=</p>
-                        <p>
-                            <field name="total_con_ganancia" nolabel="1"/>
-                        </p>
+                        <field name="total_sin_ganancia" string="Base imponible"/>
+                        <field name="ganancia" string="Profit"/>
+                        <field name="total_con_ganancia" string="Valor venta"/>
                     </group>
-
                 </xpath>
 
                 <field name="partner_id" position="after">
+                    <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
                     <field name="actividad"/>
                     <field name="via"/>
                     <field name="modalidad" attrs="{'invisible': [('via','!=', 'M')], 'required': [('via','=','M')]}"/>
@@ -69,7 +69,7 @@
                            attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id"
                            domain="[('tipo_servicio','=','agente_portuario')]"
-                           attrs="{'invisible': ['|',('via','=','A'),'&amp;',('modalidad','=','FCL'),'|',('tipo_contenedor_id','=',False),('linea_id','=',False)]}" />
+                           attrs="{'invisible': ['|',('via','=','A'),'&amp;',('modalidad','=','FCL'),'|',('tipo_contenedor_id','=',False),('linea_id','=',False)]}"/>
                     <field name="vacio_id"
                            attrs="{'invisible': ['|',('via','=','A'),'&amp;',('modalidad','=','FCL'),'|',('tipo_contenedor_id','=',False),('linea_id','=',False)]}"
                            domain="[('tipo_servicio','=','vacio')]"/>

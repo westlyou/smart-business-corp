@@ -14,6 +14,7 @@ TIPO_SERVICIO = (
     (u'transporte', u'Transporte'),
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
+    (u'aforo', u'Aforo/Inspección'),
     (u'otros', u'Otros'),
 )
 

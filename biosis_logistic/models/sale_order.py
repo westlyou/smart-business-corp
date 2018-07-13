@@ -20,6 +20,7 @@ ORDER_LINE_TIPO = (
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
     (u'agente_carga', u'Agente de carga'),
+    (u'aforo', u'Aforo/Inspección'),
     (u'otros', u'Otros'),
 )
 
@@ -32,6 +33,7 @@ TIPO_SERVICIO_DICT = {
     u'resguardo': u'Resguardo',
     u'cuadrilla': u'Cuadrilla',
     u'otros': u'Otros',
+    u'aforo': u'Aforo/Inspección',
     u'agente_carga': u'Agente de carga',
 }
 
@@ -99,10 +101,8 @@ class SaleOrder(models.Model):
     @api.multi
     def action_confirm(self):
         ret = super(SaleOrder, self).action_confirm()
-        if self.actividad == 'E':
-            secuencia = self.env['ir.sequence'].search([('code', '=', 'sbc.referencia.exportacion')], limit=1)
-        else:
-            secuencia = self.env['ir.sequence'].search([('code', '=', 'sbc.referencia.importacion')], limit=1)
+        secuencia = self.env['ir.sequence'].search(
+            [('code', '=', 'sbc.referencia.%s' % self.actividad == 'E' and 'exportacion' or 'importacion')], limit=1)
         if secuencia.exists():
             self.write({u'referencia_sbc': secuencia.next_by_id()})
         return ret
@@ -272,6 +272,8 @@ class SaleOrder(models.Model):
 
     @api.onchange('ganancia')
     def onchange_ganancia(self):
+        if self.ganancia < 350:
+            raise ValidationError(u'Recuerde que el profit mínimo a considerar debe ser mayor o igual a 350')
         res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
         return res
 
@@ -286,16 +288,6 @@ class SaleOrder(models.Model):
                 bandera = line.tipo == tipo
                 if bandera:
                     encontrado = True
-
-                    # line.update({
-                    #     u'tipo': tipo,
-                    #     u'product_id': product_id_nuevo.id,
-                    #     u'sequence': line.sequence,
-                    #     u'price_unit': product_id_nuevo.lst_price,
-                    #     u'name': '%s - %s' % (desc, product_id_nuevo.name)
-                    # })
-                    #
-                    # return True
 
                 order_lines.append((0, False, {
                     u'procurement_ids': [],
@@ -318,18 +310,6 @@ class SaleOrder(models.Model):
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
                 }))
         if not encontrado:
-            # sale_line = self.env['sale.order.line'].create({
-            #     u'sequence': self.order_line and len(self.order_line) * 10 or 0,
-            #     u'product_id': product_id_nuevo.id,
-            #     u'tipo': tipo,
-            #     u'price_unit': product_id_nuevo.lst_price,
-            #     u'order_id': self.id,
-            #     u'product_uom_qty': 1,
-            #     u'product_uom': 1,
-            #     u'name': '%s - %s' % (desc, product_id_nuevo.name)
-            # })
-            #
-            # self.order_line.append(sale_line)
             order_lines.append((0, False, {
                 u'procurement_ids': [],
                 u'tipo': tipo,
@@ -351,7 +331,6 @@ class SaleOrder(models.Model):
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
 
-            # Se reemplaza por el deposito que se ha
         res['value']['order_line'] = order_lines
         self._amount_all()
         return res
@@ -377,8 +356,6 @@ class SaleOrder(models.Model):
 
         else:
             self.valor_tipo_cambio = 0.0
-
-            # def get_tc_web(self, mes, anho, dia):
 
 
 class SaleOrderLine(models.Model):
