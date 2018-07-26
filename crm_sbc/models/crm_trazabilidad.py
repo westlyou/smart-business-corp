@@ -39,4 +39,4 @@ class CrmTrazabilidad(models.Model):
     observacion = fields.Char(string=u'Observación')
     vencimiento_estadia = fields.Date(string=u'Vencimiento de Estadia')
     vencimiento_almacenaje = fields.Date(string=u'Vencimiento Almacenaje')
-    estado_regulirazcion_id = fields.Many2one('cmr.estado_regularizacion')
+    estado_regularizacion_id = fields.Many2one('crm.estado_regularizacion')

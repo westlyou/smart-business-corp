@@ -40,7 +40,7 @@
                             <field name="observacion"/>
                             <field name="vencimiento_estadia"/>
                             <field name="vencimiento_almacenaje"/>
-                            <field name="estado_regulirazcion_id"/>
+                            <field name="estado_regularizacion_id"/>
 
 
                         </group>
