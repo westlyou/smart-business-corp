@@ -15,6 +15,7 @@ TIPO_SERVICIO = (
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
     (u'aforo', u'Aforo/Inspección'),
+    (u'profit', u'Profit'),
     (u'otros', u'Otros'),
 )
 
@@ -52,4 +53,7 @@ class ProductTemplate(models.Model):
         if self.tipo_servicio in ('agente_carga',):
             res['value']['maritimo'] = True
             res['value']['lcl'] = True
+        if self.tipo_servicio in (u'profit',):
+            res['value']['maritimo'] = False
+            res['value']['lcl'] = False
         return res

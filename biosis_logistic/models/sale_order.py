@@ -21,6 +21,7 @@ ORDER_LINE_TIPO = (
     (u'cuadrilla', u'Cuadrilla'),
     (u'agente_carga', u'Agente de carga'),
     (u'aforo', u'Aforo/Inspección'),
+    (u'profit', u'Profit'),
     (u'otros', u'Otros'),
 )
 
@@ -34,6 +35,7 @@ TIPO_SERVICIO_DICT = {
     u'cuadrilla': u'Cuadrilla',
     u'otros': u'Otros',
     u'aforo': u'Aforo/Inspección',
+    u'profit': u'Profit',
     u'agente_carga': u'Agente de carga',
 }
 
@@ -82,7 +84,7 @@ class SaleOrder(models.Model):
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
     deposito_id = fields.Many2one('product.product', string=u'Depósito')
     vacio_id = fields.Many2one('product.product', string=u'Vacio')
-    tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
+    # tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('product.product', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('product.product', string=u'Agente Portuario')
     agente_carga_id = fields.Many2one('product.product', string=u'Agente de carga')
@@ -93,10 +95,11 @@ class SaleOrder(models.Model):
     transporte_id = fields.Many2one('product.product', string='Transporte')
     resguardo_id = fields.Many2one('product.product', string='Resguardo')
     cuadrilla_id = fields.Many2one('product.product', string='Cuadrilla')
-    zona_id = fields.Many2one('sale.zona', string='Zona')
+    # zona_id = fields.Many2one('sale.zona', string='Zona')
     total_sin_ganancia = fields.Float('Precio inicial')
     ganancia = fields.Float('Ganancia')
     total_con_ganancia = fields.Float('Precio final')
+    codigo_consulta = fields.Char(u'Código para consultar')
 
     @api.multi
     def action_confirm(self):
@@ -265,23 +268,32 @@ class SaleOrder(models.Model):
         res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
         return res
 
-    @api.onchange('total_con_ganancia')
-    def onchange_total_con_ganancia(self):
-        res = dict(value=dict(ganancia=(self.total_con_ganancia - self.total_sin_ganancia)))
-        return res
+    # @api.onchange('total_con_ganancia')
+    # def onchange_total_con_ganancia(self):
+    #     res = dict(value=dict(ganancia=(self.total_con_ganancia - self.total_sin_ganancia)))
+    #     return res
 
     @api.onchange('ganancia')
     def onchange_ganancia(self):
         if self.ganancia < 350:
             raise ValidationError(u'Recuerde que el profit mínimo a considerar debe ser mayor o igual a 350')
         res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
+        if self.ganancia >= 0:
+            res_profit = self._agregar_profit(self.ganancia)
+            res['value'].update(res_profit['value'])
+
         return res
 
-    def _cambiar_order_line(self, tipo, product_id_nuevo):
+    def _agregar_profit(self, profit):
+        tipo = u'profit'
+        product_id_nuevo = self.env['product.product'].search([('tipo_servicio', '=', tipo)], limit=1)
+        return self._cambiar_order_line(tipo, product_id_nuevo, profit)
+
+    def _cambiar_order_line(self, tipo, product_id_nuevo, price_unit=None):
         res = {'value': {}}
         order_lines = []
         encontrado = False
-        desc = TIPO_SERVICIO_DICT[product_id_nuevo.tipo_servicio]
+        desc = TIPO_SERVICIO_DICT[tipo]
         if self.order_line:
             i = 0
             for line in self.order_line:
@@ -298,7 +310,7 @@ class SaleOrder(models.Model):
                     u'product_uom': 1,
                     u'sequence': line.sequence,
                     u'customer_lead': 0,
-                    u'price_unit': bandera and product_id_nuevo.lst_price or line.price_unit,
+                    u'price_unit': bandera and price_unit or product_id_nuevo.lst_price or line.price_unit,
                     u'product_uom_qty': 1,
                     u'discount': 0,
                     u'state': u'draft',
@@ -331,7 +343,8 @@ class SaleOrder(models.Model):
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
 
-        res['value']['order_line'] = order_lines
+        # res['value']['order_line'] = order_lines
+        self.order_line = order_lines
         self._amount_all()
         return res
 

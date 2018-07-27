@@ -10,8 +10,8 @@
                         <group name="logistica">
                             <group name="cabeceras">
                                 <field name="tipo_servicio"/>
-                                <field name="aereo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla','agente_portuario','vacio','agente_carga'])]}" />
-                                <field name="maritimo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla'])]}" />
+                                <field name="aereo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla','agente_portuario','vacio','agente_carga', 'profit'])]}" />
+                                <field name="maritimo" attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla', 'profit'])]}" />
                             </group>
                             <group string="Opciones vía marítima" name="opciones_maritima" attrs="{'invisible':[('maritimo', '=', False)]}">
                                 <field name="lcl" attrs="{'invisible':[('tipo_servicio', 'in', ['agente_aduana','vacio'])]}" />
