@@ -61,7 +61,7 @@ class SaleOrder(models.Model):
                 else:
                     amount_tax += line.price_tax
             order.update({
-                'total_sin_ganancia': amount_untaxed,
+                'total_sin_ganancia': amount_untaxed - self.ganancia,
                 'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
                 'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax

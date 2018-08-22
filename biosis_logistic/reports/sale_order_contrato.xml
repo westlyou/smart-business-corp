@@ -1,0 +1,69 @@
+<odoo>
+    <data>
+        <template id="sale_order_contrato">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <p>Estimados Sres.:</p>
+                    <p>
+                        Nos es grato saludarlos y presentar nuestra propuesta para un Servicio Logístico Integral de
+                        calidad para atender sus contenedores de Importación, la cual incluye los siguientes servicios:
+                    </p>
+                    <p>
+                        <table class="table" style="min-width:150mm;max-width:150mm" border="1">
+                            <tr>
+                                <td rowspan="2">
+                                    NAVIERAS
+                                </td>
+                                <td rowspan="2">
+                                    DÍAS DE ENERGÍA
+                                </td>
+                                <td rowspan="2">
+                                    DÍAS DE ALMACENAJE
+                                </td>
+                                <td>
+                                    TIPO DE DESPACHO
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    SADA PUNTO DE LLEGADA
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span t-field="o.linea_naviera_id.name">línea naviera</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.dias_energia">días de energia</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.dias_almacenaje">días de almacenaje</span>
+                                </td>
+                                <td>
+                                    <span t-field="o.punto_llegada">días de energia</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </p>
+
+                    <p>
+                        Trámite Aduanero: Importación <strong>(AGENCIAMIENTO DE ADUANA)</strong>:
+                        <ul>
+                            <li>Comisión de agencia:
+                                <strong>
+                                    <span>0.5%</span>
+                                </strong>
+                                del valor CIF (*)
+                            </li>
+                            <li>Comisión Mínima: <span>USD</span>
+                                <strong>150.00</strong>
+                            </li>
+                            <li></li>
+                        </ul>
+
+                    </p>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

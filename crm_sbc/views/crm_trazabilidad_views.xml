@@ -10,8 +10,9 @@
                     <sheet>
                         <group>
                             <field name="partner_id"/>
-                            <field name="sale_order_id"/>
-                            <field name="partner_ruc"/>
+                            <field name="partner_ruc" readonly="1"/>
+                            <field name="sale_order_id" domain="[('partner_id','=',partner_id)]"/>
+                            <field name="sale_order_referencia" readonly="1"/>
                             <field name="etd"/>
                             <field name="eta"/>
                             <field name="cita_planta"/>
@@ -21,8 +22,7 @@
                             <field name="puerto_embarque"/>
                             <field name="puerto_destino"/>
                             <field name="numero_dam"/>
-                            <field name="e_canal"/>
-                            <field name="i_canal"/>
+                            <field name="canal"/>
                             <field name="sale_order_id"/>
                             <field name="sale_order_referencia"/>
                             <field name="po_"/>

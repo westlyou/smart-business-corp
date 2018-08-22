@@ -5,11 +5,10 @@ from odoo import models, fields
 class CrmTrazabilidad(models.Model):
     _name = 'crm.trazabilidad'
 
-    sale_order_id = fields.Many2one('sale.order', string=u'Cotización')
-
     partner_id = fields.Many2one('res.partner', string=u'Cliente')
+    sale_order_id = fields.Many2one('sale.order', string=u'Cotización')
+    sale_order_referencia = fields.Char(related='sale_order_id.referencia_sbc')
     partner_ruc = fields.Char(related='partner_id.vat')
-
     etd = fields.Date(string=u'ETD')
     eta = fields.Date(string=u'ETA')
     cita_planta = fields.Date(string=u'Cita Planta')
@@ -19,10 +18,8 @@ class CrmTrazabilidad(models.Model):
     puerto_embarque = fields.Text(string=u'Puerto de Embarque')
     puerto_destino = fields.Text(string=u'Puerto de Destino')
     numero_dam = fields.Text(string=u'Nª de DAM')
-    e_canal = fields.Char(string=u'Canal')
-    i_canal = fields.Char(string=u'Canal')
-    sale_order_id = fields.Many2one('sale.order')
-    sale_order_referencia = fields.Char(related='sale_order_id.referencia_sbc')
+    canal = fields.Char(string=u'Canal')
+    # i_canal = fields.Char(string=u'Canal')
     po_ = fields.Char(string=U'Po')
     booking = fields.Char(string=u'Booking')
     n_bl = fields.Char(strig=u'Nª Bl')
