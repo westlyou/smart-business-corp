@@ -2,6 +2,7 @@
 import logging
 
 from odoo import models, fields, api, _
+from odoo.addons import decimal_precision as dp
 from odoo.tools import float_is_zero, float_compare
 from odoo.exceptions import UserError, ValidationError
 import bs4, urllib2, urllib
@@ -51,7 +52,7 @@ class SaleOrder(models.Model):
         for order in self:
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
-                amount_untaxed += line.price_subtotal
+                # amount_untaxed = amount_untaxed + line.price_subtotal
                 # FORWARDPORT UP TO 10.0
                 if order.company_id.tax_calculation_rounding_method == 'round_globally':
                     price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
@@ -60,8 +61,14 @@ class SaleOrder(models.Model):
                     amount_tax += sum(t.get('amount', 0.0) for t in taxes.get('taxes', []))
                 else:
                     amount_tax += line.price_tax
+                cantidad = line.product_uom_qty
+                punitario = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                impuestos = line.tax_id.compute_all(punitario, line.order_id.currency_id, cantidad,
+                                                    product=line.product_id, partner=order.partner_shipping_id)
+                amount_untaxed += impuestos['total_excluded']
             order.update({
                 'total_sin_ganancia': amount_untaxed - self.ganancia,
+                'total_con_ganancia': amount_untaxed,
                 'amount_untaxed': order.pricelist_id.currency_id.round(amount_untaxed),
                 'amount_tax': order.pricelist_id.currency_id.round(amount_tax),
                 'amount_total': amount_untaxed + amount_tax
@@ -100,6 +107,9 @@ class SaleOrder(models.Model):
     ganancia = fields.Float('Ganancia')
     total_con_ganancia = fields.Float('Precio final')
     codigo_consulta = fields.Char(u'Código para consultar')
+    senasa = fields.Boolean(u'SENASA')
+    # Cuestionario
+    q_almacenaje = fields.Float(u'Almacenaje', digits=dp.get_precision('Account'))
 
     @api.multi
     def action_confirm(self):
@@ -263,10 +273,10 @@ class SaleOrder(models.Model):
             _logger.info('Resultado: %s' % res)
             return res
 
-    @api.onchange('total_sin_ganancia')
-    def onchange_amount_total(self):
-        res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
-        return res
+    # @api.onchange('total_sin_ganancia')
+    # def onchange_amount_total(self):
+    #     res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
+    #     return res
 
     # @api.onchange('total_con_ganancia')
     # def onchange_total_con_ganancia(self):
@@ -275,14 +285,13 @@ class SaleOrder(models.Model):
 
     @api.onchange('ganancia')
     def onchange_ganancia(self):
+
+        # res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
+        if self.ganancia >= 0:
+            self._agregar_profit(self.ganancia)
+
         if self.ganancia < 350:
             raise ValidationError(u'Recuerde que el profit mínimo a considerar debe ser mayor o igual a 350')
-        res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
-        if self.ganancia >= 0:
-            res_profit = self._agregar_profit(self.ganancia)
-            res['value'].update(res_profit['value'])
-
-        return res
 
     def _agregar_profit(self, profit):
         tipo = u'profit'
@@ -302,50 +311,30 @@ class SaleOrder(models.Model):
                     encontrado = True
 
                 order_lines.append((0, False, {
-                    u'procurement_ids': [],
                     u'tipo': bandera and tipo or line.tipo,
-                    u'route_id': False,
-                    u'qty_delivered': 0,
                     u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
                     u'product_uom': 1,
                     u'sequence': line.sequence,
-                    u'customer_lead': 0,
-                    u'price_unit': bandera and price_unit or product_id_nuevo.lst_price or line.price_unit,
+                    u'price_unit': bandera and (price_unit or product_id_nuevo.lst_price) or line.price_unit,
                     u'product_uom_qty': 1,
-                    u'discount': 0,
-                    u'state': u'draft',
-                    u'qty_delivered_updateable': True,
-                    u'analytic_tag_ids': [],
-                    u'invoice_status': u'no',
-                    u'tax_id': [[6, False, [1]]],
-                    u'layout_category_id': False,
+                    u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
                 }))
         if not encontrado:
             order_lines.append((0, False, {
-                u'procurement_ids': [],
                 u'tipo': tipo,
-                u'route_id': False,
-                u'qty_delivered': 0,
                 u'product_id': product_id_nuevo.id,
                 u'product_uom': 1,
                 u'sequence': self.order_line and len(self.order_line) * 10 or 0,
-                u'customer_lead': 0,
-                u'price_unit': product_id_nuevo.lst_price,
+                u'price_unit': price_unit or product_id_nuevo.lst_price,
                 u'product_uom_qty': 1,
-                u'discount': 0,
-                u'state': u'draft',
-                u'qty_delivered_updateable': True,
-                u'analytic_tag_ids': [],
-                u'invoice_status': u'no',
-                u'tax_id': [[6, False, [1]]],
-                u'layout_category_id': False,
+                u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
 
         # res['value']['order_line'] = order_lines
         self.order_line = order_lines
-        self._amount_all()
+        # self._amount_all()
         return res
 
     @api.multi

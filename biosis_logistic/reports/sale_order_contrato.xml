@@ -1,69 +1,158 @@
 <odoo>
     <data>
-        <template id="sale_order_contrato">
-            <t t-call="report.external_layout">
-                <div class="page">
-                    <p>Estimados Sres.:</p>
-                    <p>
-                        Nos es grato saludarlos y presentar nuestra propuesta para un Servicio Logístico Integral de
-                        calidad para atender sus contenedores de Importación, la cual incluye los siguientes servicios:
-                    </p>
-                    <p>
-                        <table class="table" style="min-width:150mm;max-width:150mm" border="1">
-                            <tr>
-                                <td rowspan="2">
-                                    NAVIERAS
-                                </td>
-                                <td rowspan="2">
-                                    DÍAS DE ENERGÍA
-                                </td>
-                                <td rowspan="2">
-                                    DÍAS DE ALMACENAJE
-                                </td>
-                                <td>
-                                    TIPO DE DESPACHO
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    SADA PUNTO DE LLEGADA
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span t-field="o.linea_naviera_id.name">línea naviera</span>
-                                </td>
-                                <td>
-                                    <span t-field="o.dias_energia">días de energia</span>
-                                </td>
-                                <td>
-                                    <span t-field="o.dias_almacenaje">días de almacenaje</span>
-                                </td>
-                                <td>
-                                    <span t-field="o.punto_llegada">días de energia</span>
-                                </td>
-                            </tr>
-                        </table>
-                    </p>
-
-                    <p>
-                        Trámite Aduanero: Importación <strong>(AGENCIAMIENTO DE ADUANA)</strong>:
-                        <ul>
-                            <li>Comisión de agencia:
-                                <strong>
-                                    <span>0.5%</span>
-                                </strong>
-                                del valor CIF (*)
-                            </li>
-                            <li>Comisión Mínima: <span>USD</span>
-                                <strong>150.00</strong>
-                            </li>
-                            <li></li>
-                        </ul>
-
-                    </p>
+        <template id="sale_contrato_document">
+            <div class="page" style="color:#1f497d;">
+                <p>Estimados Sres.:</p>
+                <p>
+                    Nos es grato saludarlos y presentar nuestra propuesta para un Servicio Logístico Integral de
+                    calidad para atender sus contenedores de Importación, la cual incluye los siguientes servicios:
+                </p>
+                <div class="text-center">
+                    <table style="min-width:150mm;max-width:150mm" border="1">
+                        <tr>
+                            <td rowspan="2">
+                                NAVIERAS
+                            </td>
+                            <td rowspan="2">
+                                DÍAS DE ENERGÍA
+                            </td>
+                            <td rowspan="2">
+                                DÍAS DE ALMACENAJE
+                            </td>
+                            <td>
+                                TIPO DE DESPACHO
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                SADA PUNTO DE LLEGADA
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span t-field="doc.linea_id.name">línea naviera</span>
+                            </td>
+                            <td>
+                                <!--<span t-field="o.dias_energia">días de energia</span>-->
+                            </td>
+                            <td>
+                                <!--<span t-field="o.dias_almacenaje">días de almacenaje</span>-->
+                            </td>
+                            <td>
+                                <span t-esc="'{} {}'.format(doc['currency_id'].name,doc['currency_id'].symbol)">-
+                                </span>
+                                <span t-field="doc.amount_total">total</span>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+
+                <p>
+                    Trámite Aduanero: Importación <strong>(AGENCIAMIENTO DE ADUANA)</strong>:
+                    <ul>
+                        <li>Comisión de agencia:
+                            <strong>
+                                <span>0.5%</span>
+                            </strong>
+                            del valor CIF (*)
+                        </li>
+                        <li>Comisión Mínima:
+                            <span t-field="doc.currency_id.name">-</span>
+                            <strong>150.00</strong>
+                        </li>
+                        <li>Gastos Operativos:
+                            <span t-field="doc.currency_id.name">-</span>
+                            <strong>50.00</strong>
+                        </li>
+                    </ul>
+
+                </p>
+
+                <p>
+                    <strong>
+                        <span style="color: red">OBJETIVOS DEL SERVICIO:</span>
+                    </strong>
+                    <ul>
+                        <li>
+                            <span>Atención personalizada de asesoría las 24 horas del día de lunes a domingo.</span>
+                        </li>
+                        <li>
+                            <span>Atención operativa las 24 horas del día de lunes a domingo, sujeto a condiciones
+                                adicionales.
+                            </span>
+                        </li>
+                        <li>
+                            <span>Monitoreo constante del estatus de su carga.</span>
+                        </li>
+                        <li>
+                            <span>Trazabilidad en toda la cadena logística (seguimiento por GPS y envío de este a
+                                solicitud).
+                            </span>
+                        </li>
+                    </ul>
+                </p>
+
+                <p>
+                    <strong><span style="color:red;">NOTAS:</span>&amp;nbsp;INCLUYE:
+                    </strong>&amp;nbsp;En todos los escenarios:
+                    <ul>
+                        <li>Servicio Integrado de depósito con terminal de elección de Smart Business Corporation
+                            S.A.C.
+                        </li>
+                        <li>Retiro y devolución de contenedor al almacén de la línea.</li>
+                        <li>Agenciamiento de Aduana para importación de mercadería.</li>
+                        <li>Visto Bueno y gastos portuarios (gestión y costos).</li>
+                        <li>Costos por congestión portuaria operativa.</li>
+                        <li>Transporte a planta e ingreso a terminal seleccionado.</li>
+                        <li>Gastos operativos.</li>
+                        <li t-if="doc.senasa">Trámite, gestión y recursos para inspección SENASA.</li>
+                    </ul>
+
+                </p>
+
+                <p>
+                    <span style="color:red;">
+                        <strong>NO INCLUYE:</strong>
+                    </span>
+                    <ul>
+                        <li t-if="doc.senasa">
+                            <span>Pagos de derecho de inspección SENASA, impuestos y/o multas, ni financiamiento de
+                                estos para a SUNAT.
+                            </span>
+                        </li>
+                        <li><strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL
+                            SUNAT.</strong>&amp;nbsp;El mismo que tendría un recargo de
+                            <strong>
+                                <span t-esc="'{} {}'.format(doc['currency_id'].name,doc['currency_id'].symbol)"></span>&amp;nbsp;<span t-field="doc.amount_total"></span>
+                            </strong>
+                            <span>+ IGV x Contenedor x eventualidad.</span>
+                        </li>
+                        <li>Sobrecosto de terminal (<strong>Almacenaje</strong>) fuera del periodo libre ofrecido: <strong><span t-esc="'{} {} {}'.format(doc['currency_id'].name,doc['currency_id'].symbol,doc['q_almacenaje'])"></span></strong> + IGV por día x contenedor.</li>
+                        <li>Sobrecosto de terminal (<strong>energía y monitoreo</strong>) fuera del periodo libre ofrecido: USD$ 80.00 + IGV por día x contenedor.</li>
+                        <li>Costos por congestión portuaria operativa.</li>
+                        <li>Transporte a planta e ingreso a terminal seleccionado.</li>
+                        <li>Gastos operativos.</li>
+                        <li>Trámite, gestión y recursos para inspección SENASA.</li>
+                    </ul>
+                </p>
+            </div>
+        </template>
+
+        <template id="report_sale_contrato">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="biosis_logistic.sale_contrato_document"/>
+                </t>
             </t>
         </template>
+
+        <report
+                id="sale_contrato_action"
+                model="sale.order"
+                string="Cotizacion"
+                report_type="qweb-pdf"
+                name="biosis_logistic.report_sale_contrato"
+                file="biosis_logistic.report_sale_contrato"
+        />
     </data>
 </odoo>

@@ -34,6 +34,7 @@
         'data/data_inicial.xml',
         'data/ir_sequence.xml',
         'security/ir.model.access.csv',
+        'reports/sale_order_contrato.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
