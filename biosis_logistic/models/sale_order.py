@@ -88,6 +88,7 @@ class SaleOrder(models.Model):
     ], string=u'Tipo', required=True, default="FCL")
 
     referencia_sbc = fields.Char('Referencia SBC')
+    partner_atencion_id = fields.Many2one('res.partner', u'Contacto de atención')
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
     deposito_id = fields.Many2one('product.product', string=u'Depósito')
     vacio_id = fields.Many2one('product.product', string=u'Vacio')
@@ -98,7 +99,8 @@ class SaleOrder(models.Model):
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string=u'Tipo de contenedor')
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
-    modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
+    payment_method_id = fields.Many2one('account.payment.method', u'Método de pago')
+    # modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('product.product', string='Transporte')
     resguardo_id = fields.Many2one('product.product', string='Resguardo')
     cuadrilla_id = fields.Many2one('product.product', string='Cuadrilla')
@@ -109,7 +111,8 @@ class SaleOrder(models.Model):
     codigo_consulta = fields.Char(u'Código para consultar')
     senasa = fields.Boolean(u'SENASA')
     # Cuestionario
-    q_almacenaje = fields.Float(u'Almacenaje', digits=dp.get_precision('Account'))
+    # q_almacenaje = fields.Float(u'Almacenaje', digits=dp.get_precision('Account'))
+    order_quest_ids = fields.One2many('sale.order.quest', 'order_id', u'Cuestionario')
 
     @api.multi
     def action_confirm(self):
@@ -358,6 +361,42 @@ class SaleOrder(models.Model):
 
         else:
             self.valor_tipo_cambio = 0.0
+
+    @api.multi
+    def enviar_contrato(self):
+        '''
+        This function opens a window to compose an email, with the edi sale template message loaded by default
+        '''
+        self.ensure_one()
+        ir_model_data = self.env['ir.model.data']
+        try:
+            template_id = ir_model_data.get_object_reference('biosis_logistic', 'email_template_sbc_cotizacion')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference('mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False
+        ctx = dict()
+        ctx.update({
+            'default_model': 'sale.order',
+            'default_res_id': self.ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+            'custom_layout': "biosis_logistic.sbc_mail_template"
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
 
 
 class SaleOrderLine(models.Model):

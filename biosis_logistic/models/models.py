@@ -19,6 +19,7 @@ class TipoContenedor(models.Model):
     _description = 'Tipo de contenedor'
 
     name = fields.Char(u'Tipo de contenedor')
+    energia = fields.Boolean(u'Requiere energía eléctrica', default=False)
 
 
 class ModalidadPago(models.Model):

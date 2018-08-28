@@ -31,10 +31,13 @@
         'views/linea_naviera.xml',
         'views/product_template.xml',
         'views/tipo_contenedor.xml',
+        'views/sale_quest_view.xml',
         'data/data_inicial.xml',
         'data/ir_sequence.xml',
         'security/ir.model.access.csv',
+        'reports/layout.xml',
         'reports/sale_order_contrato.xml',
+        'data/email_template_sbc_cotizacion.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

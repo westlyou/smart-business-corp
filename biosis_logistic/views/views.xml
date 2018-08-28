@@ -20,6 +20,9 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <button name="action_quotation_send" position="before">
+                    <button name="enviar_contrato" string="Enviar contrato" type="object" states="draft" class="btn-primary"/>
+                </button>
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
                 </xpath>
@@ -38,6 +41,19 @@
                     <attribute name="string">Cotización Flat</attribute>
                 </xpath>
 
+                <notebook position="inside">
+                    <page name="questions" string="Cuestionario">
+                        <field name="order_quest_ids" context="{'default_order_id': id}">
+                            <tree editable="bottom">
+                                <field name="order_id" invisible="1" />
+                                <field name="quest_id" />
+                                <field name="costo" />
+                                <field name="ejemplo" widget="html" readonly="1" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+
                 <xpath expr="//notebook" position="before">
                     <group>
                         <field name="total_sin_ganancia" string="Base imponible" readonly="1"/>
@@ -46,7 +62,8 @@
                     </group>
                 </xpath>
 
-                <field name="partner_id" position="after">
+                <field name="partner_shipping_id" position="after">
+                    <field name="partner_atencion_id" domain="[('type','=','contact'),('parent_id','=',partner_id)]"/>
                     <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
                     <field name="actividad"/>
                     <field name="via"/>
@@ -65,7 +82,7 @@
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="codigo_consulta" />
                     <field name="payment_term_id"/>
-                    <field name="modalidad_pago_id"/>
+                    <field name="payment_method_id"/>
                     <field name="linea_id"
                            attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id"

@@ -11,15 +11,40 @@ class SaleQuest(models.Model):
     template_html = fields.Html(u'Template para mostrar')
     name = fields.Char(u'Nombre')
     default = fields.Float(u'Costo por defecto', digits=dp.get_precision('Account'))
+    active = fields.Boolean(u'Activo')
+    tiene_condicion = fields.Boolean(u'Condición')
+    condicion = fields.Char(u'Código python')
 
 
 class SaleOrderQuest(models.Model):
     _name = 'sale.order.quest'
 
-    quest_id = fields.Many2one('sale.quest', required=True)
-    order_id = fields.Many2one('sale.order', required=True)
+    quest_id = fields.Many2one('sale.quest', u'Pregunta',required=True)
+    order_id = fields.Many2one('sale.order', u'Pedido de venta')
     costo = fields.Float(u'Costo', digits=dp.get_precision('Account'))
+    ejemplo = fields.Html(u'Ejemplo', compute='_compute_ejemplo')
 
     @api.onchange('quest_id')
     def onchange_quest_id(self):
         self.costo = self.quest_id.default or 0.0
+
+    @api.multi
+    def aplica(self):
+        quest_id = self.quest_id
+        if quest_id.tiene_condicion:
+            order_id = self.order_id
+            condicion = eval(self.quest_id.condicion)
+        else:
+            condicion = True
+        return condicion
+
+    @api.depends('costo')
+    def _compute_ejemplo(self):
+        self.ejemplo = self.render()
+
+    @api.multi
+    def render(self):
+        if self.quest_id.template_html and self.costo:
+            template_html = self.quest_id.template_html.format(self.costo)
+            return template_html
+        return self.quest_id.template_html
