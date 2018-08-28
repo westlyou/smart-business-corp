@@ -71,6 +71,7 @@
                     <field name="tipo_contenedor_id"
                            attrs="{'invisible': ['|',('modalidad','!=', 'FCL'),('via','!=','M')], 'required': [('modalidad','=','FCL')]}"/>
                     <field name="tipo_contenedor_name" invisible="1"/>
+                    <field name="tipo_contenedor_energia" invisible="1"/>
                     <field name="deposito_id"
                            required="1"
                            domain="[('tipo_servicio','=','deposito')]"
@@ -99,6 +100,9 @@
                     <field name="transporte_id" domain="[('tipo_servicio','=','transporte')]"/>
                     <field name="cuadrilla_id" domain="[('tipo_servicio','=','cuadrilla')]"/>
                     <field name="resguardo_id" domain="[('tipo_servicio','=','resguardo')]"/>
+                    <field name="senasa"/>
+                    <field name="dias_energia" attrs="{'invisible': [('tipo_contenedor_energia','=',False)]}"/>
+                    <field name="dias_almacenaje"/>
                 </xpath>
             </field>
         </record>

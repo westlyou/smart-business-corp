@@ -99,6 +99,7 @@ class SaleOrder(models.Model):
     valor_tipo_cambio = fields.Float(string=u'Valor tipo de cambio', store=True, digits=(4, 3))
     tipo_contenedor_id = fields.Many2one('sale.contenedor.tipo', string=u'Tipo de contenedor')
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
+    tipo_contenedor_energia = fields.Boolean(related='tipo_contenedor_id.energia')
     payment_method_id = fields.Many2one('account.payment.method', u'Método de pago')
     # modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('product.product', string='Transporte')
@@ -109,10 +110,12 @@ class SaleOrder(models.Model):
     ganancia = fields.Float('Ganancia')
     total_con_ganancia = fields.Float('Precio final')
     codigo_consulta = fields.Char(u'Código para consultar')
-    senasa = fields.Boolean(u'SENASA')
     # Cuestionario
     # q_almacenaje = fields.Float(u'Almacenaje', digits=dp.get_precision('Account'))
     order_quest_ids = fields.One2many('sale.order.quest', 'order_id', u'Cuestionario')
+    senasa = fields.Boolean(u'SENASA')
+    dias_energia = fields.Integer(u'Días de energía')
+    dias_almacenaje = fields.Integer(u'Días de almacenaje')
 
     @api.multi
     def action_confirm(self):
