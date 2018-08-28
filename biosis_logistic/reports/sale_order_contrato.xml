@@ -173,6 +173,9 @@
                             </span>
                             <ul>
                                 <t t-foreach="doc.order_quest_ids" t-as="quest">
+                                    <li t-if="doc.senasa">
+                                        Pagos de derecho de inspección SENASA, impuestos y/o multas, ni financiamiento de estos para a SUNAT.
+                                    </li>
                                     <li>
                                         <t t-raw="quest.render()">render</t>
                                     </li>
