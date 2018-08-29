@@ -21,7 +21,7 @@
                             <field name="tiene_variable" />
                             <field name="tiene_condicion"/>
                             <field name="condicion" attrs="{'invisible': [('tiene_condicion','=',False)]}"/>
-                            <field name="default" placeholder="Valor por defecto" attrs="{'invisible': [('tiene_variable','=',True)]}"/>
+                            <field name="default" placeholder="Valor por defecto" attrs="{'invisible': [('tiene_variable','=',False)]}"/>
                             <field name="template_html" placeholder="Formato a renderizar" required="1"/>
                         </group>
                     </sheet>

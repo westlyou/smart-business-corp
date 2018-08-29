@@ -22,6 +22,7 @@ class SaleOrderQuest(models.Model):
 
     quest_id = fields.Many2one('sale.quest', u'Pregunta',required=True)
     order_id = fields.Many2one('sale.order', u'Pedido de venta')
+    quest_tiene_variable = fields.Boolean(related='quest_id.tiene_variable')
     costo = fields.Float(u'Costo', digits=dp.get_precision('Account'))
     ejemplo = fields.Html(u'Ejemplo', compute='_compute_ejemplo')
 

@@ -48,7 +48,8 @@
                             <tree editable="bottom">
                                 <field name="order_id" invisible="1" />
                                 <field name="quest_id" />
-                                <field name="costo" />
+                                <field name="quest_tiene_variable" invisible="1" />
+                                <field name="costo" attrs="{'readonly': [('quest_tiene_variable','=',False)]}" />
                             </tree>
                         </field>
                     </page>
