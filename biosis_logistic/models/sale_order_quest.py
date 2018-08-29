@@ -16,6 +16,15 @@ class SaleQuest(models.Model):
     tiene_condicion = fields.Boolean(u'Condición')
     condicion = fields.Char(u'Código python')
 
+    @api.multi
+    def aplica(self, order_id):
+        quest_id = self.quest_id
+        if quest_id.tiene_condicion:
+            condicion = eval(self.quest_id.condicion)
+        else:
+            condicion = True
+        return condicion
+
 
 class SaleOrderQuest(models.Model):
     _name = 'sale.order.quest'
@@ -29,15 +38,6 @@ class SaleOrderQuest(models.Model):
     @api.onchange('quest_id')
     def onchange_quest_id(self):
         self.costo = self.quest_id.default or 0.0
-
-    @api.multi
-    def aplica(self, order_id):
-        quest_id = self.quest_id
-        if quest_id.tiene_condicion:
-            condicion = eval(self.quest_id.condicion)
-        else:
-            condicion = True
-        return condicion
 
     @api.depends('costo')
     def _compute_ejemplo(self):
