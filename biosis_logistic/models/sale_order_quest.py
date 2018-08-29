@@ -18,9 +18,9 @@ class SaleQuest(models.Model):
 
     @api.multi
     def aplica(self, order_id):
-        quest_id = self.quest_id
+        quest_id = self
         if quest_id.tiene_condicion:
-            condicion = eval(self.quest_id.condicion)
+            condicion = eval(quest_id.condicion)
         else:
             condicion = True
         return condicion
