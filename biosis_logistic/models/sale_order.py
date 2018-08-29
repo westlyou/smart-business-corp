@@ -119,7 +119,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def cargar_cuestonario(self):
-        quest_ids = self.env['sale.quest'].search([('archive', '=', False)])
+        quest_ids = self.env['sale.quest'].search([])
         order_quest_ids = []
         for quest in quest_ids:
             if quest.aplica(self):
