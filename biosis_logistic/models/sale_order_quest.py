@@ -11,7 +11,8 @@ class SaleQuest(models.Model):
     template_html = fields.Html(u'Template para mostrar')
     name = fields.Char(u'Nombre')
     default = fields.Float(u'Costo por defecto', digits=dp.get_precision('Account'))
-    active = fields.Boolean(u'Activo')
+    active = fields.Boolean(u'Archivado', default=True)
+    tiene_variable = fields.Boolean(u'Tiene variable', default=True)
     tiene_condicion = fields.Boolean(u'Condición')
     condicion = fields.Char(u'Código python')
 
@@ -29,10 +30,9 @@ class SaleOrderQuest(models.Model):
         self.costo = self.quest_id.default or 0.0
 
     @api.multi
-    def aplica(self):
+    def aplica(self, order_id):
         quest_id = self.quest_id
         if quest_id.tiene_condicion:
-            order_id = self.order_id
             condicion = eval(self.quest_id.condicion)
         else:
             condicion = True

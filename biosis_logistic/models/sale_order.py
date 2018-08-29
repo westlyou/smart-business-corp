@@ -118,6 +118,17 @@ class SaleOrder(models.Model):
     dias_almacenaje = fields.Integer(u'Días de almacenaje')
 
     @api.multi
+    def cargar_cuestonario(self):
+        quest_ids = self.env['sale.quest'].search([('archive', '=', False)])
+        order_quest_ids = []
+        for quest in quest_ids:
+            if quest.aplica(self):
+                order_quest_ids.append((0, False, {
+                    'quest_id': quest.id,
+                }))
+        self.order_quest_ids = order_quest_ids
+
+    @api.multi
     def action_confirm(self):
         ret = super(SaleOrder, self).action_confirm()
         secuencia = self.env['ir.sequence'].search(

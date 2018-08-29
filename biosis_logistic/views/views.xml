@@ -43,12 +43,12 @@
 
                 <notebook position="inside">
                     <page name="questions" string="Cuestionario">
+                        <button type="object" name="cargar_cuestonario" string="Cargar cuestionario" />
                         <field name="order_quest_ids" context="{'default_order_id': id}">
                             <tree editable="bottom">
                                 <field name="order_id" invisible="1" />
                                 <field name="quest_id" />
                                 <field name="costo" />
-                                <field name="ejemplo" widget="html" readonly="1" />
                             </tree>
                         </field>
                     </page>
