@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
+import time
 
 from odoo import models, fields, api, _
-from odoo.addons import decimal_precision as dp
-from odoo.tools import float_is_zero, float_compare
 from odoo.exceptions import UserError, ValidationError
 import bs4, urllib2, urllib
 from datetime import datetime, date, timedelta
-import calendar
+import locale
 
 # Permite filtrar resultados acorde a lo que se seleccione
 _logger = logging.getLogger(__name__)
@@ -119,12 +118,16 @@ class SaleOrder(models.Model):
 
     @api.multi
     def cargar_cuestonario(self):
-        quest_ids = self.env['sale.quest'].search([])
+        if self.actividad == 'E':
+            quest_ids = self.env['sale.quest'].search([('exportacion','=',True)], order='sequence asc')
+        else:
+            quest_ids = self.env['sale.quest'].search([('importacion','=',True)], order='sequence asc')
         order_quest_ids = []
         for quest in quest_ids:
             if quest.aplica(self):
                 order_quest_ids.append((0, False, {
                     'quest_id': quest.id,
+                    'costo': quest.default or False
                 }))
         self.order_quest_ids = order_quest_ids
 
@@ -307,9 +310,6 @@ class SaleOrder(models.Model):
         if self.ganancia >= 0:
             self._agregar_profit(self.ganancia)
 
-        if self.ganancia < 350:
-            raise ValidationError(u'Recuerde que el profit mínimo a considerar debe ser mayor o igual a 350')
-
     def _agregar_profit(self, profit):
         tipo = u'profit'
         product_id_nuevo = self.env['product.product'].search([('tipo_servicio', '=', tipo)], limit=1)
@@ -376,6 +376,19 @@ class SaleOrder(models.Model):
         else:
             self.valor_tipo_cambio = 0.0
 
+    def formatear_date(self, date, formato):
+        locale.setlocale(locale.LC_TIME, '')
+        _logger.info('locale.getlocale(): {}'.format(locale.getlocale()))
+        formato_nice = time.strftime(formato, time.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        return formato_nice
+
+    @api.multi
+    def write(self, vals):
+        resultado = super(SaleOrder, self).write(vals)
+        if vals.get('state', '') == 'sent':
+            self._notificar_supervisor()
+        return resultado
+
     @api.multi
     def enviar_contrato(self):
         '''
@@ -411,6 +424,22 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    def _notificar_supervisor(self):
+        partner_ids = self.env.ref('sales_team.group_sale_manager').users.filtered(lambda u: u.id != 1).mapped(
+            'partner_id').ids
+        if partner_ids:
+            ctx = {'res_model': 'sale.order', 'res_id': self.id}
+            vals = {
+                'res_model': 'sale.order',
+                'res_id': self.id,
+                'partner_ids': [(6, False, partner_ids)],
+                'message': "<p>Se ha emitido la cotización <strong>{}</strong> y se le ha agregado como seguidor.</p>".format(self.name),
+                'send_mail': True
+
+            }
+            invite = self.env['mail.wizard.invite'].with_context(ctx).create(vals)
+            invite.add_followers()
 
 
 class SaleOrderLine(models.Model):

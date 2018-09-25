@@ -22,6 +22,10 @@
             <field name="arch" type="xml">
                 <button name="action_quotation_send" position="before">
                     <button name="enviar_contrato" string="Enviar contrato" type="object" states="draft" class="btn-primary"/>
+                    <button name="enviar_contrato" string="Reenviar contrato" type="object" states="sent"/>
+                </button>
+                <button name="action_confirm" position="attributes">
+                    <attribute name="groups">sales_team.group_sale_manager</attribute>
                 </button>
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
@@ -41,7 +45,7 @@
                     <attribute name="string">Cotización Flat</attribute>
                 </xpath>
 
-                <notebook position="inside">
+                <xpath expr="//notebook/page[1]" position="after">
                     <page name="questions" string="Cuestionario">
                         <button type="object" name="cargar_cuestonario" string="Cargar cuestionario" />
                         <field name="order_quest_ids" context="{'default_order_id': id}">
@@ -53,7 +57,7 @@
                             </tree>
                         </field>
                     </page>
-                </notebook>
+                </xpath>
 
                 <xpath expr="//notebook" position="before">
                     <group>
@@ -61,10 +65,11 @@
                         <field name="ganancia" string="Profit"/>
                         <field name="total_con_ganancia" string="Valor venta" readonly="1"/>
                     </group>
+                    <label class="label label-danger" nolabel="1" string="¡Recuerde que el profit minimo debe ser 350!" attrs="{'invisible': [('ganancia','&gt;=',350)]}"/>
                 </xpath>
 
                 <field name="partner_shipping_id" position="after">
-                    <field name="partner_atencion_id" domain="[('type','=','contact'),('parent_id','=',partner_id)]"/>
+                    <field name="partner_atencion_id" context="{'parent_id': partner_id}" domain="[('type','=','contact'),('parent_id','=',partner_id)]"/>
                     <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
                     <field name="actividad"/>
                     <field name="via"/>
@@ -84,7 +89,7 @@
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
                     <field name="codigo_consulta" />
                     <field name="payment_term_id"/>
-                    <field name="payment_method_id"/>
+                    <field name="payment_method_id" domain="[('payment_type','=','inbound')]" context="{'default_payment_type': 'inbound'}"/>
                     <field name="linea_id"
                            attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id"

@@ -1,0 +1,298 @@
+<odoo>
+    <data>
+        <template id="order_contrato_exportacion_document">
+            <t t-set="company" t-value="doc.company_id"/>
+            <t t-call="biosis_logistic.sbc_doc_header"/>
+            <div class="page" style="color:#1f497d;font-size:12pt;font-family: sans-serif;">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <strong>
+                            <span t-esc="u'COTIZACIÓN - LOG. {}/{} {} C-{}-{}'.format(doc['actividad'] == 'E' and 'EXPO' or 'IMPO',doc['modalidad'],doc['name'],doc['partner_id'].name,time.strftime('%Y',time.strptime(doc.date_order,'%Y-%m-%d %H:%M:%S')))">
+                                Encabezado
+                            </span>
+                        </strong>
+
+                    </div>
+                    <div class="col-xs-4 text-right">
+                        Miraflores,
+                        <span t-esc="doc.formatear_date(doc.date_order,'%d %B %Y')"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        Señores
+                        <br/>
+                        <strong>
+                            <span t-field="doc.partner_id.name"></span>
+                        </strong>
+                        <br/>
+                        Presente .-
+                        <br/>
+                        <t t-if="doc.partner_atencion_id">
+                            <strong>Atención</strong>
+                            <span t-esc="u'{} {}'.format(doc['partner_atencion_id'].title.name,doc['partner_atencion_id'].name)">
+                                Atención
+                            </span>
+                        </t>
+                    </div>
+
+                </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div style="border: 1px solid black;"></div>
+                    </div>
+                </div>
+
+                <br/>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            Estimados Sres.:
+                        </p>
+                        <p>
+                            Nos es grato saludarlos y presentar nuestra propuesta para un Servicio Logístico Integral de
+                            calidad
+                            para atender sus contenedores de Exportación e Importación, la cual incluye los siguientes
+                            servicios:
+                        </p>
+
+                        <div class="col-xs-12">
+                            <div class="col-xs-6">
+                                <div class="col-xs-10">
+                                    <strong>DEPOSITO</strong>
+                                    <ul>
+                                        <li>Gastos de terminal</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="col-xs-10">
+                                    <strong>AGENTE MARÍTIMO Y/O PORTUARIO</strong>
+                                    <ul>
+                                        <li>Gastos portuarios</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="col-xs-10">
+                                    <strong>VACÍOS</strong>
+                                    <ul>
+                                        <li>Gate out</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="col-xs-10">
+                                    <strong>AGENTE DE ADUANA</strong>
+                                    <ul>
+                                        <li>Agenciamiento de aduanas</li>
+                                        <li>Precintos + Gastos operativos</li>
+                                        <li>Certificados de orígen</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="col-xs-10">
+                                    <strong>TRANSPORTE TERRESTRE C/GENERADOR</strong>
+                                    <ul>
+                                        <li>Callao - Callao - Callao</li>
+                                        <li>4 hrs de estadía desde la hora citada</li>
+                                        <li>Termoregistro USRIC-8</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="col-xs-1">
+                                &amp;nbsp;
+                            </div>
+                            <div class="col-xs-10">
+                                <table class="table" style="color:#1f497d">
+                                    <tr>
+                                        <td rowspan="2" style="background: #82D0BC;">
+                                            <strong>NAVIERAS</strong>
+                                        </td>
+                                        <td rowspan="2" style="background: #82D0BC;">
+                                            <strong>OBSERVACIONES</strong>
+                                        </td>
+                                        <td style="background: #82D0BC;">
+                                            <strong>TIPO DE DESPACHO</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background: #82D0BC;">
+                                            <strong>EXPORTACIÓN DEFINITIVA</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                <span t-field="doc.linea_id.name">línea naviera</span>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <span t-esc="'1 x {}'.format(doc.tipo_contenedor_id.name)">-</span>
+                                        </td>
+                                        <td>
+                                            <span t-esc="'{} {} {} + IGV x Contenedor'.format(doc.currency_id.name, doc.currency_id.symbol, doc.amount_total)">
+                                                -
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <p>
+                            <strong>
+                                <span style="color: red">OBJETIVOS DEL SERVICIO:</span>
+                            </strong>
+                            <ul type="square">
+                                <li>
+                                    <span>Atención personalizada de asesoría las 24 horas del día de lunes a domingo.
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>Atención operativa las 24 horas del día de lunes a domingo</span>
+                                </li>
+                                <li>
+                                    <span>Monitoreo constante del estatus de su carga.</span>
+                                </li>
+                                <li>
+                                    <span>Trazabilidad en toda la cadena logística (seguimiento por GPS).</span>
+                                </li>
+                            </ul>
+                        </p>
+                        <p>
+                            <strong>
+                                <span style="color: red">INCLUYE:</span>
+                            </strong>
+                            <span>&amp;nbsp;en todos los escenarios</span>
+                            <ul type="square">
+                                <li>Servicio Integrado de depósito de exportación.</li>
+                                <li>Retiro de contenedor y transporte al punto de carguío en planta del cliente.</li>
+                                <li>Agenciamiento de Aduana para exportación de mercadería.</li>
+                                <li>1 precintos de aduana y los precintos de línea obligatorio dependiendo de la
+                                    naviera.
+                                </li>
+                                <li>Visto Bueno (gestión y costos).</li>
+                                <li>Costos por congestión portuaria operativa.</li>
+                                <li>Transporte a planta de Callao.</li>
+                                <li>Termógrafo DIGITAL de temperatura.</li>
+                                <li>Certificado de origen (Cámara de comercio o ADEX).</li>
+                            </ul>
+                        </p>
+                        <p>
+                            <ul>
+                                <li>
+                                    <strong style="color: red">INCLUYE:</strong>
+                                    Coordinación operativa con la línea de elección, así como el envío de matrices,
+                                    recojo
+                                    de BLS. Del mismo modo, necesitamos las facturas de exportación de preferencia antes
+                                    de
+                                    que zarpe el barco. Teniendo Plazo máximo un tiempo no mayor a 5 días desde brindado
+                                    el
+                                    peso.
+                                </li>
+                                <li>
+                                    <strong style="color: red">INCLUYE:</strong>
+                                    <t t-if="doc.tipo_contenedor_energia">
+                                        <strong>
+                                            <span t-field="doc.dias_energia"></span>
+                                        </strong>
+                                        días libres de energía y
+                                    </t>
+                                    <strong>
+                                        <span t-field="doc.dias_almacenaje"></span>
+                                    </strong>
+                                    días libres de almacenaje, en el caso de
+                                    Exportación,
+                                    contados desde el ETA de la Nave.
+                                </li>
+                                <t t-foreach="doc.order_quest_ids" t-as="quest">
+                                    <li>
+                                        <t t-raw="quest.render()">render</t>
+                                    </li>
+                                </t>
+                            </ul>
+                        </p>
+                        <p>
+                            <strong style="color:red;">TÉRMINO DE PAGO: <span t-field="doc.payment_term_id"></span> DE
+                                EMISIÓN / RECEPCIÓN DE FACTURA
+                            </strong>
+                        </p>
+                        <br/>
+                        <p>
+                            <span style="color:red;">IMPORTANTE:</span>
+                        </p>
+                        <p>
+                            El costo de nuestra Operación Logística está sujeto a variación por incrementos que realicen
+                            las agencias marítimas, Terminales de Almacenamiento, transporte terrestre (combustible,
+                            peajes) con y sin previo aviso, los mismos que por nuestra parte serán informados y
+                            aplicados contra comunicado de estos, <strong>CON UN MES DE ANTICIPACIÓN</strong>.
+                        </p>
+                        <p>
+                            La presente proforma deberá ser devuelta en original debidamente firmada por su
+                            representante legal en señal de conformidad.
+                        </p>
+                        <p>
+                            Atentamente,
+                        </p>
+                        <p>
+                            División Comercial
+                            <strong>Smart Business Corporation S.A.C.</strong>
+                            <br/>
+                            Central: (01) 497-4498
+                        </p>
+                        <p>
+                            La empresa
+                            <strong>
+                                <span t-field="doc.partner_id.name"></span>
+                            </strong>
+                            acepta los términos y condiciones de la presente proforma y se
+                            responsabiliza del pago íntegro y puntual de las operaciones.
+                        </p>
+                        <p>
+                            Lima,
+                            <span t-esc="doc.formatear_date(doc.date_order,'%d %B %Y')"></span>
+                        </p>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <t t-call="report.external_layout_footer"/>
+        </template>
+    </data>
+</odoo>
