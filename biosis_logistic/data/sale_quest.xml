@@ -258,7 +258,7 @@
             <field name="tiene_condicion" eval="False"/>
             <field name="sequence">14</field>
             <field name="template_html">
-                <![CDATA[<p>Costo de  –<strong>VISTO BUENO CON HBL</strong> cuando se trabaja a través de un agente de carga. Este tendrá un incremento de<strong>USD $ {} </strong>+ IGV x contenedor. (Solo en el caso de trabajar con la línea MSC).</p>]]></field>
+                <![CDATA[<p>Costo de  <strong>VISTO BUENO CON HBL</strong> cuando se trabaja a través de un agente de carga. Este tendrá un incremento de<strong>USD $ {} </strong>+ IGV x contenedor. (Solo en el caso de trabajar con la línea MSC).</p>]]></field>
         </record>
 
         <record id="imp_quest_energia_falso_flete" model="sale.quest">
@@ -300,7 +300,6 @@ que devolverse al día siguiente útil de la descarga, el servicio tendrá un re
             <field name="name">SEGURO DE CARGA</field>
             <field name="active" eval="True"/>
             <field name="tiene_variable" eval="False"/>
-            <field name="importacion" eval="True"/>
             <field name="importacion" eval="True"/>
             <field name="tiene_condicion" eval="False"/>
             <field name="sequence">22</field>
