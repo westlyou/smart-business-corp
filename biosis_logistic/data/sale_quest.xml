@@ -160,5 +160,16 @@
             <field name="sequence">29</field>
             <field name="template_html"><![CDATA[<p><strong>CUADRILLA ADICIONAL:</strong> para descarga en planta, la misma que tiene un costo de <strong>USD$ {} + IGV x persona x contenedor</strong>, mínimo cuadrilla de 4 personas</p>]]></field>
         </record>
+
+        <record id="imp_quest_energia_adicional" model="sale.quest">
+            <field name="name">AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL SUNAT</field>
+            <field name="default">250.0</field>
+            <field name="active" eval="True" />
+            <field name="tiene_variable" eval="True" />
+            <field name="importacion" eval="True" />
+            <field name="tiene_condicion" eval="False" />
+            <field name="sequence">2</field>
+            <field name="template_html"><![CDATA[<p><strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL SUNAT</strong>. El mismo que tendría un recargo de <strong>USD $ {} + IGV x Contenedor x eventualidad.</strong></p>]]></field>
+        </record>
     </data>
 </odoo>

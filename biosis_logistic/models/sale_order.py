@@ -124,9 +124,9 @@ class SaleOrder(models.Model):
     @api.multi
     def cargar_cuestonario(self):
         if self.actividad == 'E':
-            quest_ids = self.env['sale.quest'].search([('exportacion','=',True)], order='sequence asc')
+            quest_ids = self.env['sale.quest'].search([('exportacion', '=', True)], order='sequence asc')
         else:
-            quest_ids = self.env['sale.quest'].search([('importacion','=',True)], order='sequence asc')
+            quest_ids = self.env['sale.quest'].search([('importacion', '=', True)], order='sequence asc')
         order_quest_ids = []
         for quest in quest_ids:
             if quest.aplica(self):
@@ -139,10 +139,9 @@ class SaleOrder(models.Model):
     @api.multi
     def action_confirm(self):
         ret = super(SaleOrder, self).action_confirm()
-        secuencia = self.env['ir.sequence'].search(
-            [('code', '=', 'sbc.referencia.%s' % self.actividad == 'E' and 'exportacion' or 'importacion')], limit=1)
-        if secuencia.exists():
-            self.write({u'referencia_sbc': secuencia.next_by_id()})
+        code = 'sbc.referencia.%s' % (self.actividad == 'E' and 'exportacion' or 'importacion')
+        secuencia = self.env['ir.sequence'].search([('code', '=', code)], limit=1)
+        self.write({u'referencia_sbc': secuencia.next_by_id()})
         return ret
 
     def mapear_tc(self, mes, anio):
@@ -439,7 +438,8 @@ class SaleOrder(models.Model):
                 'res_model': 'sale.order',
                 'res_id': self.id,
                 'partner_ids': [(6, False, partner_ids)],
-                'message': "<p>Se ha emitido la cotización <strong>{}</strong> y se le ha agregado como seguidor.</p>".format(self.name),
+                'message': "<p>Se ha emitido la cotización <strong>{}</strong> y se le ha agregado como seguidor.</p>".format(
+                    self.name),
                 'send_mail': True
 
             }
