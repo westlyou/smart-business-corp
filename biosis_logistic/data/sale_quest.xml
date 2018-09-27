@@ -262,7 +262,7 @@
         </record>
 
         <record id="imp_quest_energia_falso_flete" model="sale.quest">
-            <field name="name">FALSO FLETE</field>
+            <field name="name">FALSO FLETE (El tiempo máximo de espera de la unidad de transporte)</field>
             <field name="default">100.0</field>
             <field name="active" eval="True"/>
             <field name="tiene_variable" eval="True"/>
@@ -274,7 +274,7 @@
         </record>
 
         <record id="imp_quest_servicio_transporte" model="sale.quest">
-            <field name="name">FALSO FLETE</field>
+            <field name="name">Servicio Extraordinario</field>
             <field name="default">80.0</field>
             <field name="active" eval="True"/>
             <field name="tiene_variable" eval="True"/>
@@ -297,10 +297,15 @@ que devolverse al día siguiente útil de la descarga, el servicio tendrá un re
 <strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
         </record>
         <record id="imp_quest_seguro" model="sale.quest">
-        <field name="name">SEGURO DE CARGA</field>
-        <field name="active" eval="True"/>
-        <field name="tiene_variable" eval="False"/>
-        <field name="importacion" eval="True"/>
-        <field name=
+            <field name="name">SEGURO DE CARGA</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="importacion" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">22</field>
+            <field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD: </strong> En caso que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de
+<strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
+        </record>
     </data>
 </odoo>

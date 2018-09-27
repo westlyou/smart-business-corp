@@ -381,7 +381,11 @@ class SaleOrder(models.Model):
             self.valor_tipo_cambio = 0.0
 
     def formatear_date(self, date, formato):
-        locale.setlocale(locale.LC_TIME, '')
+        try:
+            locale.setlocale(locale.LC_TIME, 'es_PE.UTF-8')
+        except Exception as e:
+            _logger.error("ERROR AL INTENTAR FORMATEAR LA FECHA Y HORA")
+            locale.setlocale(locale.LC_TIME,'')
         _logger.info('locale.getlocale(): {}'.format(locale.getlocale()))
         formato_nice = time.strftime(formato, time.strptime(date, '%Y-%m-%d %H:%M:%S'))
         return formato_nice
