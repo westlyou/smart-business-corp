@@ -116,6 +116,11 @@ class SaleOrder(models.Model):
     dias_energia = fields.Integer(u'Días de energía')
     dias_almacenaje = fields.Integer(u'Días de almacenaje')
 
+    @api.constrains('order_quest_ids')
+    def _check_order_quest_ids(self):
+        if not self.order_quest_ids or len(self.order_quest_ids) < 1:
+            raise ValidationError('Debe llenar el cuestionario')
+
     @api.multi
     def cargar_cuestonario(self):
         if self.actividad == 'E':

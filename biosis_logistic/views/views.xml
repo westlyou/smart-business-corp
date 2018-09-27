@@ -48,10 +48,10 @@
                 <xpath expr="//notebook/page[1]" position="after">
                     <page name="questions" string="Cuestionario">
                         <button type="object" name="cargar_cuestonario" string="Cargar cuestionario" />
-                        <field name="order_quest_ids" context="{'default_order_id': id}">
+                        <field name="order_quest_ids" context="{'default_order_id': id}" options="{'no_create_edit': True}">
                             <tree editable="bottom">
                                 <field name="order_id" invisible="1" />
-                                <field name="quest_id" />
+                                <field name="quest_id" readonly="1"/>
                                 <field name="quest_tiene_variable" invisible="1" />
                                 <field name="costo" attrs="{'readonly': [('quest_tiene_variable','=',False)]}" />
                             </tree>
