@@ -4,172 +4,303 @@
         <record id="exp_quest_energia_adicional" model="sale.quest">
             <field name="name">Energía adicional</field>
             <field name="default">80.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">1</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">Energía adicional</span>, fuera del periodo libre ofrecido: <strong>USD$ {} + IGV</strong> por día x contenedor.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">Energía adicional</span>, fuera del periodo libre ofrecido: <strong>USD$ {} + IGV</strong> por día x contenedor.</p>]]></field>
         </record>
 
         <record id="exp_quest_almacenaje_adicional" model="sale.quest">
             <field name="name">Almacenaje adicional</field>
             <field name="default">40.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">3</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">Almacenaje adicional</span>, fuera del periodo libre ofrecido: <strong>USD$ {} + IGV</strong> por día x contenedor.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">Almacenaje adicional</span>, fuera del periodo libre ofrecido: <strong>USD$ {} + IGV</strong> por día x contenedor.</p>]]></field>
         </record>
 
         <record id="exp_quest_resguardo_und" model="sale.quest">
             <field name="name">RESGUARDO POLICIAL en unidad vehicular</field>
             <field name="default">70.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">5</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, <strong>RESGUARDO POLICIAL en unidad vehicular</strong>. Costo <strong>USD$ {} + IGV</strong> x Contenedor x Efectivo. (Zona Callao).</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, <strong>RESGUARDO POLICIAL en unidad vehicular</strong>. Costo <strong>USD$ {} + IGV</strong> x Contenedor x Efectivo. (Zona Callao).</p>]]></field>
         </record>
 
         <record id="exp_quest_sobrestadia" model="sale.quest">
             <field name="name">Sobrecostos de línea (sobrestadía)</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="False" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">7</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, Sobrecostos de línea (sobrestadía) es Trasladado al Exportador quien cancelará directamente a la NAVIERA</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, Sobrecostos de línea (sobrestadía) es Trasladado al Exportador quien cancelará directamente a la NAVIERA</p>]]></field>
         </record>
 
         <record id="exp_quest_costo_recarga" model="sale.quest">
             <field name="name">Costo de recarga</field>
             <field name="default">75.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">9</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, costo de recarga de visto bueno cuando se trabaja a traves de un agente de carga. Este tendrá un incremento de <strong>USD $ {} + IGV</strong> x contenedor</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, costo de recarga de visto bueno cuando se trabaja a traves de un agente de carga. Este tendrá un incremento de <strong>USD $ {} + IGV</strong> x contenedor</p>]]></field>
         </record>
 
         <record id="exp_quest_roleo_nave" model="sale.quest">
             <field name="name">Cambio de Estado por ROLEO de Nave</field>
             <field name="default">50.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">11</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, <strong>Cambio de Estado por ROLEO de Nave</strong>; situación que sucede cuando se envía el Booking con una nueva nave de la previamente programada, habiendo ya ingresado el primer contenedor del lote total, el costo es <strong>USD $ {} + IGV</strong> x contenedor</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, <strong>Cambio de Estado por ROLEO de Nave</strong>; situación que sucede cuando se envía el Booking con una nueva nave de la previamente programada, habiendo ya ingresado el primer contenedor del lote total, el costo es <strong>USD $ {} + IGV</strong> x contenedor</p>]]></field>
         </record>
 
         <record id="exp_quest_canal_rojo" model="sale.quest">
             <field name="name">Aforo físico para ADUANAS o Aforo físico para inspección BOE</field>
             <field name="default">250.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">13</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, <strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o AFORO FÍSICO PARA INSPECCIÓN BOE</strong>. El mismo que tendría un recargo de <strong>USD $ {} + IGV</strong> x contenedor x eventualidad</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, <strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o AFORO FÍSICO PARA INSPECCIÓN BOE</strong>. El mismo que tendría un recargo de <strong>USD $ {} + IGV</strong> x contenedor x eventualidad</p>]]></field>
         </record>
 
         <record id="exp_quest_correcciones_pesos" model="sale.quest">
             <field name="name">Correcciones por pesos</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="False" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">15</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span>, En las correcciones por pesos y/u otros que se realicen <strong>fuera de tiempo</strong> como ingreso tardío de carga, envío tardío de documentos, etc. serán facturados al exportador, si fuera su responsabilidad.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span>, En las correcciones por pesos y/u otros que se realicen <strong>fuera de tiempo</strong> como ingreso tardío de carga, envío tardío de documentos, etc. serán facturados al exportador, si fuera su responsabilidad.</p>]]></field>
         </record>
 
         <record id="exp_quest_flete_maritimo" model="sale.quest">
             <field name="name">Pagos de flete marítimos / Handling / THC / THO</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="False" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">17</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span> Pagos de flete marítimos / Handling / THC / THO por ser un cobro realizado por las Navieras ligados al flete marítimo, así como impuestos y/o derechos arancelarios.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span> Pagos de flete marítimos / Handling / THC / THO por ser un cobro realizado por las Navieras ligados al flete marítimo, así como impuestos y/o derechos arancelarios.</p>]]></field>
         </record>
 
         <record id="exp_quest_seguro_carga" model="sale.quest">
             <field name="name">Seguro de carga</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="False" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">19</field>
-            <field name="template_html"><![CDATA[<p><span style="color:red">No incluye</span> <strong>Seguro de carga</strong>: Es responsabilidad del exportador contratar un seguro para la carga y el contenedor</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><span style="color:red">No incluye</span> <strong>Seguro de carga</strong>: Es responsabilidad del exportador contratar un seguro para la carga y el contenedor</p>]]></field>
         </record>
 
         <record id="exp_quest_termografo" model="sale.quest">
             <field name="name">Información sobre termógrafo</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="False" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="False"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">21</field>
-            <field name="template_html"><![CDATA[<p>El termógrafo utilizado proporciona 8,001 grabaciones de temperatura en tiempo real. La vida útil del producto es de hasta 2 años antes de la configuración y 6 meses de vida útil desde el momento de la configuración. Dispositivo se conecta directamente al puerto USB de la computadora para generar automáticamente un informe en PDF completamente detallado con la opción de descargar los datos utilizando el software gratuito.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p>El termógrafo utilizado proporciona 8,001 grabaciones de temperatura en tiempo real. La vida útil del producto es de hasta 2 años antes de la configuración y 6 meses de vida útil desde el momento de la configuración. Dispositivo se conecta directamente al puerto USB de la computadora para generar automáticamente un informe en PDF completamente detallado con la opción de descargar los datos utilizando el software gratuito.</p>]]></field>
         </record>
 
         <record id="exp_quest_late_arrival" model="sale.quest">
             <field name="name">Late arrival</field>
             <field name="default">200.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">23</field>
-            <field name="template_html"><![CDATA[<p>En caso de solicitar y de requerir LATE ARRIVAL o ingreso tardío de contenedor (solicitud de ingreso del cliente después del “cut off”) este tendrá un costo de <strong>USD$ {} + IGV x contenedor</strong>, previa autorización del terminal y la línea naviera.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p>En caso de solicitar y de requerir LATE ARRIVAL o ingreso tardío de contenedor (solicitud de ingreso del cliente después del “cut off”) este tendrá un costo de <strong>USD$ {} + IGV x contenedor</strong>, previa autorización del terminal y la línea naviera.</p>]]></field>
         </record>
 
         <record id="exp_quest_falso_flete" model="sale.quest">
             <field name="name">Falso flete</field>
             <field name="default">200.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">25</field>
-            <field name="template_html"><![CDATA[<p>El servicio de transporte solo incluye la movilización de la carga sin resguardo, salvo que el cliente lo solicite expresamente; del mismo modo, no incluye cuadrilla y/o maquinaria para la estiba del contenedor. El tiempo máximo de espera de la unidad de transporte desde que llega a planta (hora de carguío programada), carga y hasta que se retira es de máximo 4 horas. Pasado el tiempo se cobrará un falso flete de <strong>S/ {} + IGV x cada 2 horas adicionales</strong>.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p>El servicio de transporte solo incluye la movilización de la carga sin resguardo, salvo que el cliente lo solicite expresamente; del mismo modo, no incluye cuadrilla y/o maquinaria para la estiba del contenedor. El tiempo máximo de espera de la unidad de transporte desde que llega a planta (hora de carguío programada), carga y hasta que se retira es de máximo 4 horas. Pasado el tiempo se cobrará un falso flete de <strong>S/ {} + IGV x cada 2 horas adicionales</strong>.</p>]]></field>
         </record>
 
         <record id="exp_quest_pernocte_unidad" model="sale.quest">
             <field name="name">Pernocte de unidad</field>
             <field name="default">80.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">27</field>
-            <field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD:</strong> En caso de que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de <strong>USD$ {} + IGV x contenedor</strong>.</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><strong>PERNOCTE DE UNIDAD:</strong> En caso de que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de <strong>USD$ {} + IGV x contenedor</strong>.</p>]]></field>
         </record>
 
         <record id="exp_quest_cuadrilla_adicional" model="sale.quest">
             <field name="name">Cuadrilla adicional</field>
             <field name="default">20.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="exportacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="exportacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">29</field>
-            <field name="template_html"><![CDATA[<p><strong>CUADRILLA ADICIONAL:</strong> para descarga en planta, la misma que tiene un costo de <strong>USD$ {} + IGV x persona x contenedor</strong>, mínimo cuadrilla de 4 personas</p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><strong>CUADRILLA ADICIONAL:</strong> para descarga en planta, la misma que tiene un costo de <strong>USD$ {} + IGV x persona x contenedor</strong>, mínimo cuadrilla de 4 personas</p>]]></field>
         </record>
 
-        <record id="imp_quest_energia_adicional" model="sale.quest">
+        <record id="imp_quest_aforo_fisico" model="sale.quest">
             <field name="name">AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL SUNAT</field>
             <field name="default">250.0</field>
-            <field name="active" eval="True" />
-            <field name="tiene_variable" eval="True" />
-            <field name="importacion" eval="True" />
-            <field name="tiene_condicion" eval="False" />
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
             <field name="sequence">2</field>
-            <field name="template_html"><![CDATA[<p><strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL SUNAT</strong>. El mismo que tendría un recargo de <strong>USD $ {} + IGV x Contenedor x eventualidad.</strong></p>]]></field>
+            <field name="template_html">
+                <![CDATA[<p><strong>AFORO FÍSICO PARA ADUANAS (CANAL ROJO) o INSPECCIÓN ALEATORIA DE CONTROL SUNAT</strong>. El mismo que tendría un recargo de <strong>USD $ {} + IGV x Contenedor x eventualidad.</strong></p>]]></field>
         </record>
+
+        <record id="imp_quest_energia_almacenaje" model="sale.quest">
+            <field name="name">Sobrecosto de terminal (Almacenaje)</field>
+            <field name="default">40.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True    "/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">4</field>
+            <field name="template_html">
+                <![CDATA[<p>Sobrecosto de terminal<strong>(Almacenaje)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia_energia_minitoreo" model="sale.quest">
+            <field name="name">Sobrecosto de terminal (energía y monitoreo)</field>
+            <field name="default">80.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True    "/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">6</field>
+            <field name="template_html">
+                <![CDATA[<p>Sobrecosto de terminal<strong>(energía y monitoreo)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia_resguardo_armado_un_efectivo" model="sale.quest">
+            <field name="name">RESGUARDO ARMADO ADICIONAL 1 EFECTIVO</field>
+            <field name="default">80.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">8</field>
+            <field name="template_html">
+                <![CDATA[<p><strong>RESGUARDO ARMADO ADICIONAL 1 EFECTIVO</strong>: El costo de este servicio incluirá foto y ubicación satelital, con envío de manera periódica desde salida de depósito temporal hasta su llegada a planta de descarga.
+- 1 efectivo en 1 unidad vehicular a un costo de  <strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia_resguardo_armado_dos_efectivo" model="sale.quest">
+            <field name="name">RESGUARDO ARMADO ADICIONAL 2 EFECTIVOS</field>
+            <field name="default">100.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">10</field>
+            <field name="template_html">
+                <![CDATA[<p><strong>RESGUARDO ARMADO ADICIONAL 2 EFECTIVOS</strong>: 2 efectivos en 1 unidad vehicular a un Costo de <strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia__sini" model="sale.quest">
+            <field name="name">SINI (SISTEMA DE INSPECCIÓN NO INTRUSIVA)</field>
+            <field name="default">80.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">12</field>
+            <field name="template_html">
+                <![CDATA[<p>Desvío al COMPLEJO ADUANERO IAMC – ZONA DE AFORO Y ESCANEO –<strong>SINI (SISTEMA DE INSPECCIÓN NO INTRUSIVA)</strong>. La misma que tendrá un costo de <strong>USD $ {} </strong> x contenedor. Este costo corresponde al desvío de la unidad de transporte a Puerto Nuevo – Callao, originando un flete adicional de traslado dentro de zona callao, cola de ingreso a escáner, espera de turno y obtención del acta de inspección. Se sugiere acompañar a la unidad con resguardo policial, por ser zona de alto riesgo.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia_hbl" model="sale.quest">
+            <field name="name">VISTO BUENO CON HBL</field>
+            <field name="default">75.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">14</field>
+            <field name="template_html">
+                <![CDATA[<p>Costo de  –<strong>VISTO BUENO CON HBL</strong> cuando se trabaja a través de un agente de carga. Este tendrá un incremento de<strong>USD $ {} </strong>+ IGV x contenedor. (Solo en el caso de trabajar con la línea MSC).</p>]]></field>
+        </record>
+
+        <record id="imp_quest_energia_falso_flete" model="sale.quest">
+            <field name="name">FALSO FLETE</field>
+            <field name="default">100.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">16</field>
+            <field name="template_html">
+                <![CDATA[<p>El servicio de transporte solo incluye la movilización de la carga sin resguardo, salvo que el cliente lo solicite expresamente y por escrito. Del mismo modo, no incluye cuadrilla y/o maquinaria para la descarga del contenedor. El tiempo máximo de espera de la unidad de transporte desde que llega a planta u hora de descarga programada), descarga del contenedor y hasta que se retira es de <u>máximo 5 horas</u>. Pasado el tiempo se cobrará un <strong>FALSO FLETE</strong> de <strong>USD $ {} </strong>+ + IGV x cada 3 horas adicionales.</p>]]></field>
+        </record>
+
+        <record id="imp_quest_servicio_transporte" model="sale.quest">
+            <field name="name">FALSO FLETE</field>
+            <field name="default">80.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">18</field>
+            <field name="template_html"><![CDATA[<p>Tener en cuenta que el servicio de transporte debe iniciarse y culminarse dentro del mismo día de descarga del contenedor. En caso de no llegar a devolver el contenedor hasta las 6 pm, se solicitará el pago de “Servicio Extraordinario” a cuenta del cliente para cumplir con dicha devolución hasta las 8:00 pm a fin de que la unidad no se quede cargada hasta el día siguiente y cumpla con sus demás servicios. En caso de fuerza mayor, el contenedor tuviera
+que devolverse al día siguiente útil de la descarga, el servicio tendrá un recargo de
+<strong>USD $ {} </strong> + IGV x contenedor, equivalente a un <strong>FALSO FLETE</strong> zona callao. </p>]]></field>
+        </record>
+        <record id="imp_quest_pernocte" model="sale.quest">
+            <field name="name">•PERNOCTE DE UNIDAD</field>
+            <field name="default">80.0</field>
+            <field name="active" eval="True"/>
+            <field name="tiene_variable" eval="True"/>
+            <field name="importacion" eval="True"/>
+            <field name="tiene_condicion" eval="False"/>
+            <field name="sequence">20</field>
+            <field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD: </strong> En caso que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de
+<strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
+        </record>
+        <record id="imp_quest_seguro" model="sale.quest">
+        <field name="name">SEGURO DE CARGA</field>
+        <field name="active" eval="True"/>
+        <field name="tiene_variable" eval="False"/>
+        <field name="importacion" eval="True"/>
+        <field name=
     </data>
 </odoo>
