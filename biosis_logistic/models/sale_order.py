@@ -7,9 +7,11 @@ from datetime import datetime, date, timedelta
 
 import bs4
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 
 # Permite filtrar resultados acorde a lo que se seleccione
+from odoo.exceptions import ValidationError
+
 _logger = logging.getLogger(__name__)
 
 ORDER_LINE_TIPO = (
@@ -145,6 +147,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        if self.approval_state != u'aprobado':
+            raise ValidationError(
+                _('No se puede confirmar un pedido de venta que no haya sido aprobado por el responsable'))
         ret = super(SaleOrder, self).action_confirm()
         code = 'sbc.referencia.%s' % (self.actividad == 'E' and 'exportacion' or 'importacion')
         secuencia = self.env['ir.sequence'].search([('code', '=', code)], limit=1)
@@ -342,7 +347,7 @@ class SaleOrder(models.Model):
                     u'product_uom': 1,
                     u'sequence': line.sequence,
                     u'price_unit': bandera and tipo == u'profit' and 0.0 or (
-                                (price_unit or product_id_nuevo.lst_price) or line.price_unit),
+                            (price_unit or product_id_nuevo.lst_price) or line.price_unit),
                     u'product_uom_qty': 1,
                     u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name

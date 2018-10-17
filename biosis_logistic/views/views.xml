@@ -50,10 +50,10 @@
                 <xpath expr="//button[@name='action_quotation_send']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <button name="action_confirm" position="attributes">
+                <!--<button name="action_confirm" position="attributes">-->
                     <!--<attribute name="groups">sales_team.group_sale_manager</attribute>-->
-                    <attribute name="invisible">1</attribute>
-                </button>
+                    <!--<attribute name="invisible">1</attribute>-->
+                <!--</button>-->
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
                 </xpath>
