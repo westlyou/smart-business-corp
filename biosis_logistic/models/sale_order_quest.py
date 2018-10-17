@@ -49,6 +49,6 @@ class SaleOrderQuest(models.Model):
     @api.multi
     def render(self):
         if self.quest_id.template_html and self.quest_id.tiene_variable:
-            template_html = self.quest_id.template_html.format(self.costo or 0.0)
+            template_html = self.quest_id.template_html.format('%.2f' % (self.costo or 0.0))
             return template_html
         return self.quest_id.template_html

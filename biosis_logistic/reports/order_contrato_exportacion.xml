@@ -4,6 +4,7 @@
             <t t-set="company" t-value="doc.company_id"/>
             <t t-call="biosis_logistic.sbc_doc_header"/>
             <div class="page" style="color:#1f497d;font-size:12pt;font-family: sans-serif;">
+
                 <div class="row">
                     <div class="col-xs-8">
                         <strong>
@@ -106,7 +107,7 @@
                                     <ul>
                                         <li>Agenciamiento de aduanas</li>
                                         <li>Precintos + Gastos operativos</li>
-                                        <li>Certificados de orígen</li>
+                                        <li t-if="doc.certificado_origen">Certificados de orígen</li>
                                     </ul>
                                 </div>
                                 <div class="col-xs-2">
@@ -115,13 +116,14 @@
                                     </span>
                                 </div>
                             </div>
+
                             <div class="col-xs-6">
                                 <div class="col-xs-10">
-                                    <strong>TRANSPORTE TERRESTRE C/GENERADOR</strong>
+                                    <strong>AGENTE DE ADUANA</strong>
                                     <ul>
-                                        <li>Callao - Callao - Callao</li>
-                                        <li>4 hrs de estadía desde la hora citada</li>
-                                        <li>Termoregistro USRIC-8</li>
+                                        <li>Agenciamiento de aduanas</li>
+                                        <li>Precintos + Gastos operativos</li>
+                                        <li t-if="doc.certificado_origen">Certificados de orígen</li>
                                     </ul>
                                 </div>
                                 <div class="col-xs-2">
@@ -129,6 +131,69 @@
                                         <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
                                     </span>
                                 </div>
+                            </div>
+
+                            <div class="col-xs-6" t-if="doc.tipo_contenedor_energia">
+                                <div class="col-xs-10">
+                                    <strong>TRANSPORTE TERRESTRE C/GENERADOR</strong>
+                                    <ul>
+                                        <li>Callao - Callao - Callao</li>
+                                        <li>4 hrs de estadía desde la hora citada</li>
+                                        <li t-if="doc.termoregistro">Termoregistro USRIC-8</li>
+                                    </ul>
+                                </div>
+                                <div class="col-xs-2">
+                                    <span style="width: 20vw; height:20vw;">
+                                        <input type="checkbox" class="form-control" name="" checked="checked" id=""/>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6">
+                                <t t-if="doc.cuadrilla_id">
+                                    <div class="col-xs-10">
+                                        <strong>ADICIONALES CUADRILLA</strong>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span style="width: 20vw; height:20vw;">
+                                            <input type="checkbox" class="form-control" name="" checked="checked"
+                                                   id=""/>
+                                        </span>
+                                    </div>
+                                </t>
+                                <t t-if="doc.resguardo_id">
+                                    <div class="col-xs-10">
+                                        <strong>RESGUARDO</strong>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span style="width: 20vw; height:20vw;">
+                                            <input type="checkbox" class="form-control" name="" checked="checked"
+                                                   id=""/>
+                                        </span>
+                                    </div>
+                                </t>
+                                <t t-if="doc.termoregistro">
+                                    <div class="col-xs-10">
+                                        <strong>TERMOREGISTRO</strong>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span style="width: 20vw; height:20vw;">
+                                            <input type="checkbox" class="form-control" name="" checked="checked"
+                                                   id=""/>
+                                        </span>
+                                    </div>
+                                </t>
+                                <t t-if="doc.certificado_origen">
+                                    <div class="col-xs-10">
+                                        <strong>CERTIFICADO DE ORÍGEN</strong>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span style="width: 20vw; height:20vw;">
+                                            <input type="checkbox" class="form-control" name="" checked="checked"
+                                                   id=""/>
+                                        </span>
+                                    </div>
+                                </t>
                             </div>
                         </div>
 
@@ -179,7 +244,8 @@
                             </strong>
                             <ul type="square">
                                 <li>
-                                    <span>Atención personalizada de asesoría las 24 horas del día de lunes a domingo.
+                                    <span>Atención operativa las 24 horas del día de lunes a domingo, sujeto a
+                                        condiciones adicionales.
                                     </span>
                                 </li>
                                 <li>
@@ -193,7 +259,7 @@
                                 </li>
                             </ul>
                         </p>
-                        <p>
+                        <!--<p>
                             <strong>
                                 <span style="color: red">INCLUYE:</span>
                             </strong>
@@ -211,7 +277,7 @@
                                 <li>Termógrafo DIGITAL de temperatura.</li>
                                 <li>Certificado de origen (Cámara de comercio o ADEX).</li>
                             </ul>
-                        </p>
+                        </p>-->
                         <p>
                             <ul>
                                 <li>
@@ -247,9 +313,50 @@
                             </ul>
                         </p>
                         <p>
-                            <strong style="color:red;">TÉRMINO DE PAGO: <span t-field="doc.payment_term_id"></span> DE
-                                EMISIÓN / RECEPCIÓN DE FACTURA
-                            </strong>
+                            <span style="color:red;">
+                                <strong>OBSERVACIONES:</strong>
+                            </span>
+                            <ul>
+                                <li>
+                                    <span style="color:red;">TÉRMINO DE PAGO:</span>&amp;nbsp;
+                                    <span t-field="doc.payment_term_id">términos de pago</span>
+                                </li>
+                                <li>
+                                    <span style="color:red;">MÉTODO DE PAGO:</span>&amp;nbsp;
+                                    <span t-field="doc.payment_method_id">metodo de pago</span>
+                                </li>
+                                <li>
+                                    El servicio logístico solo aplica para los gastos regulares del despacho señalados
+                                    al inicio
+                                    de esta cotización. Los gastos como flete marítimos / Handling / THC / Avisos de
+                                    llegada de
+                                    Agentes de Carga, por ser cobros realizado por las Navieras ligados al flete
+                                    marítimo y del
+                                    mismo modo los SOBRECOSTOS como Sobrestadía y/o Almacenaje, <strong>NO SERÁN
+                                    FINANCIADOS
+                                </strong> y por demás deberán ser prepagados para continuar con la operación.
+                                </li>
+                                <li>
+                                    Smart Business Corporation S.A.C. tiene la capacidad de poder atender operaciones
+                                    las 24
+                                    horas del día, los 365 días del año, previa coordinación operativa, pues estamos
+                                    comprometido con el logística de nuestros clientes. Notar que todos los servicios
+                                    solicitados a iniciarse sobre las 5 pm o antes de las 5 am, así como las operaciones
+                                    en días
+                                    domingos, feriados y festivos, tendrán un recargo del 50% + un gasto operativo
+                                    adicional de
+                                    USD $ 30.00 + IGV.
+                                </li>
+                                <li>
+                                    Tener en cuenta que las programaciones de retiro son como mínimo 24 horas antes de
+                                    lo
+                                    requerido y estarán sujetas a disponibilidad de citas de retiro, unidades de
+                                    transporte
+                                    disponibles y/o congestión del depósito temporal y no será responsabilidad de Smart
+                                    Business
+                                    Corporation S.A.C. los sobrecostos que estos generen.
+                                </li>
+                            </ul>
                         </p>
                         <br/>
                         <p>
@@ -259,7 +366,8 @@
                             El costo de nuestra Operación Logística está sujeto a variación por incrementos que realicen
                             las agencias marítimas, Terminales de Almacenamiento, transporte terrestre (combustible,
                             peajes) con y sin previo aviso, los mismos que por nuestra parte serán informados y
-                            aplicados contra comunicado de estos, <strong>CON UN MES DE ANTICIPACIÓN</strong>.
+                            aplicados contra comunicado de estos, <strong>AL PRIMER DÍA ÚTIL DEL MES SIGUIENTE DE
+                            ENVIADA LA COMUNICACIÓN</strong>.
                         </p>
                         <p>
                             La presente proforma deberá ser devuelta en original debidamente firmada por su

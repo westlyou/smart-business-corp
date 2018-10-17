@@ -197,7 +197,7 @@
             <field name="tiene_condicion" eval="False"/>
             <field name="sequence">4</field>
             <field name="template_html">
-                <![CDATA[<p>Sobrecosto de terminal<strong>(Almacenaje)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
+                <![CDATA[<p>Sobrecosto de terminal<strong> (Almacenaje)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
         </record>
 
         <record id="imp_quest_energia_energia_minitoreo" model="sale.quest">
@@ -209,7 +209,7 @@
             <field name="tiene_condicion" eval="False"/>
             <field name="sequence">6</field>
             <field name="template_html">
-                <![CDATA[<p>Sobrecosto de terminal<strong>(energía y monitoreo)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
+                <![CDATA[<p>Sobrecosto de terminal<strong> (energía y monitoreo)</strong> fuera del periodo libre ofrecido: <strong>USD $ {}</strong>+IGV por día x contenedor.</p>]]></field>
         </record>
 
         <record id="imp_quest_energia_resguardo_armado_un_efectivo" model="sale.quest">
@@ -296,15 +296,15 @@ que devolverse al día siguiente útil de la descarga, el servicio tendrá un re
             <field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD: </strong> En caso que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de
 <strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
         </record>
-        <record id="imp_quest_seguro" model="sale.quest">
-            <field name="name">SEGURO DE CARGA</field>
-            <field name="active" eval="True"/>
-            <field name="tiene_variable" eval="False"/>
-            <field name="importacion" eval="True"/>
-            <field name="tiene_condicion" eval="False"/>
-            <field name="sequence">22</field>
-            <field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD: </strong> En caso que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de
-<strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>
-        </record>
+        <!--<record id="imp_quest_seguro" model="sale.quest">-->
+            <!--<field name="name">SEGURO DE CARGA</field>-->
+            <!--<field name="active" eval="True"/>-->
+            <!--<field name="tiene_variable" eval="False"/>-->
+            <!--<field name="importacion" eval="True"/>-->
+            <!--<field name="tiene_condicion" eval="False"/>-->
+            <!--<field name="sequence">22</field>-->
+            <!--<field name="template_html"><![CDATA[<p><strong>PERNOCTE DE UNIDAD: </strong> En caso que la unidad de transporte se quedase a pernoctar en planta a solicitud del cliente para descarga el día siguiente útil y por razones que no competan responsabilidad de Smart Business Corporation S.A.C. esto tendrá un recargo de-->
+<!--<strong>USD $ {} </strong> + IGV x contenedor.</p>]]></field>-->
+        <!--</record>-->
     </data>
 </odoo>

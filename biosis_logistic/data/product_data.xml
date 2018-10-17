@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sbc_profit" model="product.product">
+            <field name="name">PROFIT</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="standard_price">1.0</field>
+            <field name="list_price">1.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Profit</field>
+            <field name="tipo_servicio">profit</field>
+        </record>
+
+        <record id="sbc_senasa" model="product.product">
+            <field name="name">SENASA</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="standard_price">1.0</field>
+            <field name="list_price">1.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">SENASA</field>
+            <field name="default_code">SENASA</field>
+            <field name="tipo_servicio">senasa</field>
+        </record>
+
+        <record id="sbc_certificado_origen" model="product.product">
+            <field name="name">Certificado de orígen</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="standard_price">1.0</field>
+            <field name="list_price">1.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="description">Certificado de origen</field>
+            <field name="default_code">Certificado de origen</field>
+            <field name="tipo_servicio">certificado_origen</field>
+        </record>
+    </data>
+</odoo>
