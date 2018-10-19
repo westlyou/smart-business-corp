@@ -346,8 +346,8 @@ class SaleOrder(models.Model):
                     u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
                     u'product_uom': 1,
                     u'sequence': line.sequence,
-                    u'price_unit': bandera and tipo == u'profit' and 0.0 or (
-                            (price_unit or product_id_nuevo.lst_price) or line.price_unit),
+                    u'price_unit': bandera and (tipo == u'profit' and 0.0 or (
+                            (price_unit or product_id_nuevo.lst_price)) or line.price_unit),
                     u'product_uom_qty': 1,
                     u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
