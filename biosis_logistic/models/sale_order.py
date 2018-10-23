@@ -128,6 +128,13 @@ class SaleOrder(models.Model):
     termoregistro = fields.Boolean(u'Termoregistro')
     approval_state = fields.Selection(APPROVAL_STATE, u'Aprobación interna', default=u'no_notificado')
     tipo_despacho = fields.Selection([(u'sada', u'SADA'), (u'diferido', u'DIFERIDO')], u'Tipo de despacho')
+    state = fields.Selection([
+        ('draft', 'Quotation'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sales Order'),
+        ('done', 'Locked'),
+        ('cancel', 'Anulada'),
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     @api.multi
     def cargar_cuestonario(self):

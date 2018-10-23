@@ -32,6 +32,11 @@
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+
+                <button name="action_cancel" position="attributes">
+                    <attribute name="string">Anular</attribute>
+                </button>
+
                 <button name="action_quotation_send" position="before">
                     <field name="approval_state" invisible="1"/>
                     <label class="label label-danger" nolabel="1" string="Cotización no aprobada"
@@ -51,8 +56,8 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <!--<button name="action_confirm" position="attributes">-->
-                    <!--<attribute name="groups">sales_team.group_sale_manager</attribute>-->
-                    <!--<attribute name="invisible">1</attribute>-->
+                <!--<attribute name="groups">sales_team.group_sale_manager</attribute>-->
+                <!--<attribute name="invisible">1</attribute>-->
                 <!--</button>-->
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
@@ -115,10 +120,12 @@
                            attrs="{'invisible': ['&amp;','&amp;',('via','=','M'),('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
+                    <field name="referencia_sbc" readonly="1" states="sent,sale,done,cancel"/>
                 </field>
 
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
-                    <field name="tipo_despacho" attrs="{'invisible': [('actividad','!=','I')], 'required': [('actividad','=','I')]}"/>
+                    <field name="tipo_despacho"
+                           attrs="{'invisible': [('actividad','!=','I')], 'required': [('actividad','=','I')]}"/>
                     <field name="codigo_consulta"/>
                     <field name="payment_term_id"/>
                     <field name="payment_method_id" domain="[('payment_type','=','inbound')]"
