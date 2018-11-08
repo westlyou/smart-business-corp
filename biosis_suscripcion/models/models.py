@@ -2,8 +2,8 @@
 
 from odoo import models, fields, api
 
-# class crm_sbc(models.Model):
-#     _name = 'crm_sbc.crm_sbc'
+# class biosis_suscripcion(models.Model):
+#     _name = 'biosis_suscripcion.biosis_suscripcion'
 
 #     name = fields.Char()
 #     value = fields.Integer()
