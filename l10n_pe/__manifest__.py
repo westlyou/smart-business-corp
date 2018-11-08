@@ -1,5 +1,5 @@
 {
-    'name': 'Peru - Accounting',
+    'name': 'Peru - Plan contable actualizado',
     'description': """
 Plan contable peruano e impuestos de acuerdo a disposiciones vigentes de la
 SUNAT, actualizado y corregido por BIOSIS

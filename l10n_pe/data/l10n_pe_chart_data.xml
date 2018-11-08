@@ -454,8 +454,8 @@
         <record id="1212" model="account.account.template">
             <field name="name">CUENTAS POR COBRAR COMERCIALES – TERCEROS - FACTURAS, BOLETAS Y OTROS COMPROBANTES POR COBRAR / EMITIDAS EN CARTERA</field>
             <field name="code">1212</field>
-            <field name="reconcile" eval="False"/>
-            <field ref="account.data_account_type_current_assets" name="user_type_id"/>
+            <field name="reconcile" eval="True"/>
+            <field ref="account.data_account_type_receivable" name="user_type_id"/>
             <field name="chart_template_id" ref="pe_chart_template"/>
         </record>
         <record id="1213" model="account.account.template">
@@ -6300,7 +6300,7 @@
             <field name="name">CUENTAS POR PAGAR COMERCIALES – TERCEROS - FACTURAS, BOLETAS Y OTROS COMPROBANTES POR PAGAR / EMITIDAS</field>
             <field name="code">4212</field>
             <field name="reconcile" eval="True"/>
-            <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
+            <field ref="account.data_account_type_payable" name="user_type_id"/>
             <field name="chart_template_id" ref="pe_chart_template"/>
         </record>
         <record id="422" model="account.account.template">
@@ -6321,7 +6321,7 @@
             <field name="name">CUENTAS POR PAGAR COMERCIALES – TERCEROS / HONORARIOS POR PAGAR</field>
             <field name="code">424</field>
             <field name="reconcile" eval="True"/>
-            <field ref="account.data_account_type_current_liabilities" name="user_type_id"/>
+            <field ref="account.data_account_type_payable" name="user_type_id"/>
             <field name="chart_template_id" ref="pe_chart_template"/>
         </record>
         <record id="43" model="account.account.template">
@@ -12604,8 +12604,8 @@
             <field name="chart_template_id" ref="pe_chart_template"/>
         </record>
         <record id="pe_chart_template" model="account.chart.template">
-            <field name="property_account_receivable_id" ref="1211"/>
-            <field name="property_account_payable_id" ref="4211"/>
+            <field name="property_account_receivable_id" ref="1212"/>
+            <field name="property_account_payable_id" ref="4212"/>
             <field name="property_account_expense_categ_id" ref="6011"/>
             <field name="property_account_income_categ_id" ref="70111"/>
             <field name="income_currency_exchange_account_id" ref="676"/>

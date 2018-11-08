@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="biosis_cont_account_invoice_supplier_form" model="ir.ui.view">
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <!--<field name="numero"/>-->
+                    <field name="pagina_detraccion"/> <!--Solo es para permitir visualizar la pagina de detracciones-->
+                </field>
+                <!--<field name="price_unit" position="after">-->
+                <!--<field name="operacion"/>-->
+                <!--</field>-->
+                <field name="partner_id" position="before">
+                    <field name="tipo_comprobante_id"
+                           domain="['|',('code', '=', '01'),('code', '=', '03')]"
+                           required="1" string="Tipo de comprobante"/>
+                    <field name="numero_comprobante" tring="Numero"/>
+                </field>
+                <notebook position="inside">
+
+                    <page string="Constancia Depósito Detracción"
+                          attrs="{'invisible':[('pagina_detraccion','=',False)]}">
+                        <group>
+                            <group>
+                                <field name="numero_detraccion"/>
+                                <field name="fecha_emision_detraccion"/>
+                            </group>
+                            <group>
+                                <field name="cuenta_detraccion"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+                <field name="amount_total" position="after">
+                    <field name="monto_detraccion" class="oe_subtotal_footer_separator"
+                    />
+                    <field name="currency_id_soles" invisible="1"/>
+                    <field name="monto_detraccion_soles"
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                    />
+                    <field name="monto_factura" class="oe_subtotal_footer_separator"
+                    />
+                </field>
+                <field name="residual" position="after">
+                    <field name="residual_detraccion_soles" class="oe_subtotal_footer_separator"
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                    />
+                </field>
+
+            </field>
+        </record>
+        <record id="biosis_cont_invoice_line_form" model="ir.ui.view">
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="model">account.invoice.line</field>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="after">
+                    <!--<field name="operacion"/>-->
+                </field>
+
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="biosis_account_invoice_supplier_tree">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='number']" position="replace">
+                    <field name="number" string="Correlativo"></field>
+                </xpath>
+                <xpath expr="//field[@name='reference']" position="replace">
+                    <field name="numero_comprobante"/>
+                </xpath>
+                <xpath expr="//field[@name='amount_total_signed']" position="before">
+                    <field name="monto_factura" sum="Monto factura"/>
+                    <field name="monto_detraccion" sum="Monto detracción"/>
+                </xpath>
+                <xpath expr="//field[@name='residual_signed']" position="after">
+                    <field name="currency_id_soles" invisible="1"/>
+                    <field name="residual_detraccion_soles" string="A pagar det."
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                           sum="A pagar detracción"/>
+                    <field name="cuenta_detraccion"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+            <field name="domain">['&amp;',('type','in',('in_invoice', 'in_refund')),
+                ('is_recibo','!=',True)]
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--Cambios en view_tree módulo de contabilidad -->
+        <!--<record id="account.action_invoice_tree2" model="ir.actions.act_window">-->
+        <!--<field name="domain">['&amp;',('type','in',('in_invoice', 'in_refund')),('tipo_documento','not in',(8,9))]-->
+        <!--</field>-->
+        <!--</record>-->
+
+        <!--Cambios en view_tree módulo de compras -->
+        <!--<record id="purchase.action_invoice_pending" model="ir.actions.act_window">-->
+        <!--<field name="domain">['&amp;',('type','=','in_invoice'),('tipo_documento','not in',(8,9))]</field>-->
+        <!--</record>-->
+
+        <record model="ir.ui.view" id="biosis_account_invoice_form">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="pagina_detraccion"
+                           invisible="1"/> <!--Solo es para permitir visualizar la pagina de detracciones-->
+                </xpath>
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="check_impuesto_renta" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='check_impuesto_renta']" position="after">
+                    <field name="impuesto_renta" attrs="{'invisible':[('check_impuesto_renta','=',False)]}"/>
+                </xpath>
+                <!--</xpath>-->
+                <notebook position="inside">
+                    <page string="Constancia Depósito Detracción"
+                          attrs="{'invisible':[('pagina_detraccion','=',False)]}">
+                        <group>
+                            <group>
+                                <field name="numero_detraccion"/>
+                                <field name="fecha_emision_detraccion"/>
+                            </group>
+                            <group></group>
+                        </group>
+                    </page>
+                </notebook>
+                <field name="amount_total" position="after">
+                    <field name="monto_detraccion" class="oe_subtotal_footer_separator"/>
+                    <field name="currency_id_soles" invisible="1"/>
+                    <field name="moneda" invisible="1"/>
+                    <field name="monto_detraccion_soles"
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                           attrs="{'invisible':[('moneda','=','PEN')]}"/>
+                    <field name="monto_factura" class="oe_subtotal_footer_separator"/>
+                </field>
+                <field name="residual" position="after">
+                    <field name="residual_detraccion_soles" class="oe_subtotal_footer_separator"
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                           attrs="{'invisible':[('moneda','=','PEN'),('state', '=', 'draft')]}"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="biosis_account_invoice_tree">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='amount_total_signed']" position="before">
+                    <field name="monto_factura" sum="Monto factura"/>
+                    <field name="monto_detraccion" sum="Monto detracción"/>
+                </xpath>
+                <xpath expr="//field[@name='residual_signed']" position="after">
+                    <field name="currency_id_soles" invisible="1"/>
+                    <field name="residual_detraccion_soles" string="A pagar det."
+                           widget='monetary' options="{'currency_field': 'currency_id_soles'}"
+                           sum="A pagar detracción"/>
+                    <field name="cuenta_detraccion"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
