@@ -10,14 +10,12 @@ TIPO_SERVICIO = (
     (u'vacio', u'Vacío'),
     (u'agente_aduana', u'Agente aduana'),
     (u'agente_portuario', u'Agente portuario'),
+    (u'agente_carga', u'Agente de carga'),
     (u'transporte', u'Transporte'),
     (u'resguardo', u'Resguardo'),
     (u'cuadrilla', u'Cuadrilla'),
-    (u'agente_carga', u'Agente de carga'),
     (u'aforo', u'Aforo/Inspección'),
     (u'profit', u'Profit'),
-    (u'senasa', u'SENASA'),
-    (u'certificado_origen', u'Certificado de orígen'),
     (u'otros', u'Otros'),
 )
 
