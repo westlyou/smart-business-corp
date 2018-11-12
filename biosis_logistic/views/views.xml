@@ -14,30 +14,14 @@
             </field>
         </record>
 
-        <record id="view_order_tree2" model="ir.ui.view">
-            <field name="name">sale.order.tree</field>
-            <field name="model">sale.order</field>
-            <field name="priority">5</field>
-            <field name="inherit_id" ref="sale.view_order_tree"/>
-            <field name="arch" type="xml">
-                <field name="state" position="before">
-                    <field name="referencia_sbc"/>
-                </field>
-            </field>
-        </record>
-
         <record id="bio_cont_sale_order_view" model="ir.ui.view">
             <field name="name">bio_cont.sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="priority">17</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-
-                <button name="action_cancel" position="attributes">
-                    <attribute name="string">Anular</attribute>
-                </button>
-
                 <button name="action_quotation_send" position="before">
+<<<<<<< HEAD
                     <field name="approval_state" invisible="1"/>
                     <label class="label label-danger" nolabel="1" string="Cotización no aprobada"
                            attrs="{'invisible': [('approval_state','!=','no_aprobado')]}"/>
@@ -51,14 +35,10 @@
                     <button name="enviar_contrato" string="Enviar contrato" type="object" attrs="{'invisible': [('approval_state','!=','aprobado')]}"
                             class="btn-primary"/>
                     <button name="enviar_contrato" string="Reenviar contrato" type="object" states="sent,done"/>
+=======
+                    <button name="enviar_contrato" string="Enviar contrato" type="object" states="draft" class="btn-primary"/>
+>>>>>>> c6bde32f07f0d5463690f01180cbab48f73d0cc2
                 </button>
-                <xpath expr="//button[@name='action_quotation_send']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <!--<button name="action_confirm" position="attributes">-->
-                <!--<attribute name="groups">sales_team.group_sale_manager</attribute>-->
-                <!--<attribute name="invisible">1</attribute>-->
-                <!--</button>-->
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
                 </xpath>
@@ -77,20 +57,25 @@
                     <attribute name="string">Cotización Flat</attribute>
                 </xpath>
 
-                <xpath expr="//notebook/page[1]" position="after">
+                <notebook position="inside">
                     <page name="questions" string="Cuestionario">
+<<<<<<< HEAD
                         <button type="object" name="cargar_cuestonario" string="Cargar cuestionario"/>
                         <field name="order_quest_ids" context="{'default_order_id': id}"
                                options="{'no_create_edit': True}" delete="false">
+=======
+                        <button type="object" name="cargar_cuestonario" string="Cargar cuestionario" />
+                        <field name="order_quest_ids" context="{'default_order_id': id}">
+>>>>>>> c6bde32f07f0d5463690f01180cbab48f73d0cc2
                             <tree editable="bottom">
-                                <field name="order_id" invisible="1"/>
-                                <field name="quest_id" readonly="1"/>
-                                <field name="quest_tiene_variable" invisible="1"/>
-                                <field name="costo" attrs="{'readonly': [('quest_tiene_variable','=',False)]}"/>
+                                <field name="order_id" invisible="1" />
+                                <field name="quest_id" />
+                                <field name="quest_tiene_variable" invisible="1" />
+                                <field name="costo" attrs="{'readonly': [('quest_tiene_variable','=',False)]}" />
                             </tree>
                         </field>
                     </page>
-                </xpath>
+                </notebook>
 
                 <xpath expr="//notebook" position="before">
                     <group>
@@ -98,14 +83,10 @@
                         <field name="ganancia" string="Profit"/>
                         <field name="total_con_ganancia" string="Valor venta" readonly="1"/>
                     </group>
-                    <label class="label label-danger" nolabel="1"
-                           string="¡Recuerde que el profit mínimo debe ser S/. 350 o $105!"
-                           attrs="{'invisible': [('ganancia','&gt;=',350)]}"/>
                 </xpath>
 
                 <field name="partner_shipping_id" position="after">
-                    <field name="partner_atencion_id" context="{'parent_id': partner_id}"
-                           domain="[('type','=','contact'),('parent_id','=',partner_id)]"/>
+                    <field name="partner_atencion_id" domain="[('type','=','contact'),('parent_id','=',partner_id)]"/>
                     <field name="referencia_sbc" readonly="1" invisible="[('referencia_sbc','=',False)]"/>
                     <field name="actividad"/>
                     <field name="via"/>
@@ -120,16 +101,12 @@
                            attrs="{'invisible': ['&amp;','&amp;',('via','=','M'),('tipo_contenedor_id','=',False),('modalidad','=','FCL')]}"/>
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
-                    <field name="referencia_sbc" readonly="1" states="sent,sale,done,cancel"/>
                 </field>
 
                 <xpath expr="//field[@name='payment_term_id']" position="replace">
-                    <field name="tipo_despacho"
-                           attrs="{'invisible': [('actividad','!=','I')], 'required': [('actividad','=','I')]}"/>
-                    <field name="codigo_consulta"/>
+                    <field name="codigo_consulta" />
                     <field name="payment_term_id"/>
-                    <field name="payment_method_id" domain="[('payment_type','=','inbound')]"
-                           context="{'default_payment_type': 'inbound'}"/>
+                    <field name="payment_method_id"/>
                     <field name="linea_id"
                            attrs="{'invisible': ['|',('tipo_contenedor_id','=',False),('via','!=','M')]}"/>
                     <field name="agente_portuario_id"
@@ -149,8 +126,6 @@
                     <field name="senasa"/>
                     <field name="dias_energia" attrs="{'invisible': [('tipo_contenedor_energia','=',False)]}"/>
                     <field name="dias_almacenaje"/>
-                    <field name="certificado_origen"/>
-                    <field name="termoregistro" attrs="{'invisible': [('tipo_contenedor_energia','=',False)]}"/>
                 </xpath>
             </field>
         </record>

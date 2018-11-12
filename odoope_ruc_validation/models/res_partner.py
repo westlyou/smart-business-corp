@@ -20,8 +20,8 @@
 ###############################################################################
 
 import logging
-from openerp import models, fields, api
-from openerp.exceptions import Warning
+from odoo import models, fields, api
+from odoo.exceptions import Warning
 
 import requests
 
@@ -52,6 +52,8 @@ class ResPartner(models.Model):
     registration_name = fields.Char('Name', size=128, index=True, )
     catalog_06_id = fields.Many2one('einvoice.catalog.06','Tipo Doc.', index=True, required=True)
     state = fields.Selection([('habido','Habido'),('nhabido','No Habido')],'State')
+    #condicion = fields.Char('Condicion')
+
     
     #~ tipo_contribuyente = fields.Char('Tipo de contribuyente')
     #~ fecha_inscripcion = fields.Date('Fecha de inscripción')
@@ -63,13 +65,13 @@ class ResPartner(models.Model):
     #~ sistema_contabilidad = fields.Char('Sistema contabilidad')
     #~ ultima_actualizacion_sunat = fields.Date('Última actualización')
 	
-    @api.onchange('catalog_06_id','vat')    
+    @api.onchange('catalog_06_id','vat')
     def vat_change(self):
         self.update_document()
-        
+
     @api.one
     def update_document(self):
-    
+
         if not self.vat:
             return False
         if self.catalog_06_id and self.catalog_06_id.code == '1':
@@ -109,7 +111,7 @@ class ResPartner(models.Model):
                     self.province_id = dist_id.province_id.id
                     self.state_id = dist_id.state_id.id
                     self.country_id = dist_id.country_id.id
-                        
+
                 # Si es HABIDO, caso contrario es NO HABIDO
                 tstate = d['condicion_contribuyente']
                 if tstate == 'HABIDO':
@@ -117,12 +119,14 @@ class ResPartner(models.Model):
                 else:
                     tstate = 'nhabido'
                 self.state = tstate
-                            
-                self.name = d['nombre_comercial']                    
+
+                self.name = d['nombre_comercial']
                 self.registration_name = d['nombre']
                 self.street = d['domicilio_fiscal']
                 self.vat_subjected = True
                 self.is_company = True
+                #self.condicion = d['condicion_contribuyente']
+
         else:
             True
 
