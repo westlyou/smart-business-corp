@@ -34,10 +34,14 @@
         'views/sale_quest_view.xml',
         'data/data_inicial.xml',
         'data/ir_sequence.xml',
+        'data/sale_quest.xml',
         'security/ir.model.access.csv',
         'reports/layout.xml',
+        'reports/order_contrato_exportacion.xml',
+        'reports/order_contrato_importacion.xml',
         'reports/sale_order_contrato.xml',
         'data/email_template_sbc_cotizacion.xml',
+        'data/product_data.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

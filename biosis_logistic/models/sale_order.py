@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
+import locale
 import logging
+import time
+import urllib2
+from datetime import datetime, date, timedelta
+
+import bs4
 
 from odoo import models, fields, api, _
-from odoo.addons import decimal_precision as dp
-from odoo.tools import float_is_zero, float_compare
-from odoo.exceptions import UserError, ValidationError
-import bs4, urllib2, urllib
-from datetime import datetime, date, timedelta
-import calendar
 
 # Permite filtrar resultados acorde a lo que se seleccione
+from odoo.exceptions import ValidationError
+
 _logger = logging.getLogger(__name__)
 
 ORDER_LINE_TIPO = (
@@ -23,22 +25,35 @@ ORDER_LINE_TIPO = (
     (u'agente_carga', u'Agente de carga'),
     (u'aforo', u'Aforo/Inspección'),
     (u'profit', u'Profit'),
+    (u'senasa', u'SENASA'),
+    (u'certificado_origen', u'Certificado de orígen'),
     (u'otros', u'Otros'),
 )
 
-TIPO_SERVICIO_DICT = {
-    u'deposito': u'Depósito',
-    u'vacio': u'Vacío',
-    u'agente_aduana': u'Agente aduana',
-    u'agente_portuario': u'Agente portuario',
-    u'transporte': u'Transporte',
-    u'resguardo': u'Resguardo',
-    u'cuadrilla': u'Cuadrilla',
-    u'otros': u'Otros',
-    u'aforo': u'Aforo/Inspección',
-    u'profit': u'Profit',
-    u'agente_carga': u'Agente de carga',
-}
+APPROVAL_STATE = (
+    (u'no_notificado', u'Por notificar al supervisor'),
+    (u'notificado', u'Notificado al supervisor'),
+    (u'aprobado', u'Aprobado por el supervisor'),
+    (u'no_aprobado', u'No aprobado por el supervisor'),
+)
+
+TIPO_SERVICIO_DICT = {key: value for key, value in ORDER_LINE_TIPO}
+
+
+# TIPO_SERVICIO_DICT = {
+#     u'deposito': u'Depósito',
+#     u'vacio': u'Vacío',
+#     u'agente_aduana': u'Agente aduana',
+#     u'agente_portuario': u'Agente portuario',
+#     u'transporte': u'Transporte',
+#     u'resguardo': u'Resguardo',
+#     u'cuadrilla': u'Cuadrilla',
+#     u'otros': u'Otros',
+#     u'aforo': u'Aforo/Inspección',
+#     u'profit': u'Profit',
+#     u'senasa': u'SENASA',
+#     u'agente_carga': u'Agente de carga',
+# }
 
 
 class SaleOrder(models.Model):
@@ -52,8 +67,6 @@ class SaleOrder(models.Model):
         for order in self:
             amount_untaxed = amount_tax = 0.0
             for line in order.order_line:
-                # amount_untaxed = amount_untaxed + line.price_subtotal
-                # FORWARDPORT UP TO 10.0
                 if order.company_id.tax_calculation_rounding_method == 'round_globally':
                     price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                     taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty,
@@ -92,7 +105,6 @@ class SaleOrder(models.Model):
     linea_id = fields.Many2one('sale.linea', string=u'Linea')
     deposito_id = fields.Many2one('product.product', string=u'Depósito')
     vacio_id = fields.Many2one('product.product', string=u'Vacio')
-    # tipo_vacio_id = fields.Many2one('sale.tipo.vacio', string=u'Tipo Vacio')
     agente_aduana_id = fields.Many2one('product.product', string=u'Agente de Aduana')
     agente_portuario_id = fields.Many2one('product.product', string=u'Agente Portuario')
     agente_carga_id = fields.Many2one('product.product', string=u'Agente de carga')
@@ -101,44 +113,54 @@ class SaleOrder(models.Model):
     tipo_contenedor_name = fields.Char(related='tipo_contenedor_id.name')
     tipo_contenedor_energia = fields.Boolean(related='tipo_contenedor_id.energia')
     payment_method_id = fields.Many2one('account.payment.method', u'Método de pago')
-    # modalidad_pago_id = fields.Many2one('sale.pago.modalidad', string='Modalidad de pago')
     transporte_id = fields.Many2one('product.product', string='Transporte')
     resguardo_id = fields.Many2one('product.product', string='Resguardo')
     cuadrilla_id = fields.Many2one('product.product', string='Cuadrilla')
-    # zona_id = fields.Many2one('sale.zona', string='Zona')
     total_sin_ganancia = fields.Float('Precio inicial')
     ganancia = fields.Float('Ganancia')
     total_con_ganancia = fields.Float('Precio final')
     codigo_consulta = fields.Char(u'Código para consultar')
-    # Cuestionario
-    # q_almacenaje = fields.Float(u'Almacenaje', digits=dp.get_precision('Account'))
     order_quest_ids = fields.One2many('sale.order.quest', 'order_id', u'Cuestionario')
     senasa = fields.Boolean(u'SENASA')
     dias_energia = fields.Integer(u'Días de energía')
     dias_almacenaje = fields.Integer(u'Días de almacenaje')
+    certificado_origen = fields.Boolean(u'Certificado de orígen')
+    termoregistro = fields.Boolean(u'Termoregistro')
+    approval_state = fields.Selection(APPROVAL_STATE, u'Aprobación interna', default=u'no_notificado')
+    tipo_despacho = fields.Selection([(u'sada', u'SADA'), (u'diferido', u'DIFERIDO')], u'Tipo de despacho')
+    state = fields.Selection([
+        ('draft', 'Quotation'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sales Order'),
+        ('done', 'Locked'),
+        ('cancel', 'Anulada'),
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     @api.multi
     def cargar_cuestonario(self):
-        quest_ids = self.env['sale.quest'].search([])
+        if self.actividad == 'E':
+            quest_ids = self.env['sale.quest'].search([('exportacion', '=', True)], order='sequence asc')
+        else:
+            quest_ids = self.env['sale.quest'].search([('importacion', '=', True)], order='sequence asc')
         order_quest_ids = []
         for quest in quest_ids:
             if quest.aplica(self):
                 order_quest_ids.append((0, False, {
                     'quest_id': quest.id,
+                    'costo': quest.default or False
                 }))
+        self.order_quest_ids = [(6, False, [])]
         self.order_quest_ids = order_quest_ids
 
     @api.multi
     def action_confirm(self):
+        if self.approval_state != u'aprobado':
+            raise ValidationError(
+                _('No se puede confirmar un pedido de venta que no haya sido aprobado por el responsable'))
         ret = super(SaleOrder, self).action_confirm()
-        if self.actividad == 'E':
-            secuencia = self.env['ir.sequence'].search([('code','=','sbc.referencia.exportacion')])
-        else:
-            secuencia = self.env['ir.sequence'].search([('code', '=', 'sbc.referencia.importacion')])
-        # secuencia = self.env['ir.sequence'].search(
-        #     [('code', '=', 'sbc.referencia.%s' % self.actividad == 'E' and 'exportacion' or 'importacion')], limit=1)
-        if secuencia.exists():
-            self.write({u'referencia_sbc': secuencia.next_by_id()})
+        code = 'sbc.referencia.%s' % (self.actividad == 'E' and 'exportacion' or 'importacion')
+        secuencia = self.env['ir.sequence'].search([('code', '=', code)], limit=1)
+        self.write({u'referencia_sbc': secuencia.next_by_id()})
         return ret
 
     def mapear_tc(self, mes, anio):
@@ -294,32 +316,27 @@ class SaleOrder(models.Model):
             _logger.info('Resultado: %s' % res)
             return res
 
-    # @api.onchange('total_sin_ganancia')
-    # def onchange_amount_total(self):
-    #     res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
-    #     return res
+    @api.onchange('senasa')
+    def onchange_senasa(self):
+        if self.senasa:
+            return self._agregar_servicio(u'senasa', 0.0)
 
-    # @api.onchange('total_con_ganancia')
-    # def onchange_total_con_ganancia(self):
-    #     res = dict(value=dict(ganancia=(self.total_con_ganancia - self.total_sin_ganancia)))
-    #     return res
+    @api.onchange('certificado_origen')
+    def onchange_certificado_origen(self):
+        if self.certificado_origen:
+            return self._agregar_servicio(u'certificado_origen', 0.0)
 
     @api.onchange('ganancia')
     def onchange_ganancia(self):
-
-        # res = dict(value=dict(total_con_ganancia=(self.total_sin_ganancia + self.ganancia)))
         if self.ganancia >= 0:
-            self._agregar_profit(self.ganancia)
+            return self._agregar_servicio(u'profit', self.ganancia)
 
-        if self.ganancia < 350:
-            raise ValidationError(u'Recuerde que el profit mínimo a considerar debe ser mayor o igual a 350')
+    def _agregar_servicio(self, servicio, monto=0.0):
+        # tipo = u'profit'
+        product_id_nuevo = self.env['product.product'].search([('tipo_servicio', '=', servicio)], limit=1)
+        return self._cambiar_order_line(servicio, product_id_nuevo, monto)
 
-    def _agregar_profit(self, profit):
-        tipo = u'profit'
-        product_id_nuevo = self.env['product.product'].search([('tipo_servicio', '=', tipo)], limit=1)
-        return self._cambiar_order_line(tipo, product_id_nuevo, profit)
-
-    def _cambiar_order_line(self, tipo, product_id_nuevo, price_unit=None):
+    def _cambiar_order_line(self, tipo, product_id_nuevo, price_unit=0.0):
         res = {'value': {}}
         order_lines = []
         encontrado = False
@@ -336,7 +353,8 @@ class SaleOrder(models.Model):
                     u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
                     u'product_uom': 1,
                     u'sequence': line.sequence,
-                    u'price_unit': bandera and (price_unit or product_id_nuevo.lst_price) or line.price_unit,
+                    u'price_unit': bandera and (tipo == u'profit' and 0.0 or (
+                            (price_unit or product_id_nuevo.lst_price)) or line.price_unit),
                     u'product_uom_qty': 1,
                     u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
@@ -353,9 +371,7 @@ class SaleOrder(models.Model):
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
 
-        # res['value']['order_line'] = order_lines
         self.order_line = order_lines
-        # self._amount_all()
         return res
 
     @api.multi
@@ -379,6 +395,27 @@ class SaleOrder(models.Model):
 
         else:
             self.valor_tipo_cambio = 0.0
+
+    def formatear_date(self, date, formato):
+        try:
+            locale.setlocale(locale.LC_TIME, 'es_PE.UTF-8')
+        except Exception as e:
+            _logger.error("ERROR AL INTENTAR FORMATEAR LA FECHA Y HORA")
+            locale.setlocale(locale.LC_TIME, '')
+        _logger.info('locale.getlocale(): {}'.format(locale.getlocale()))
+        formato_nice = time.strftime(formato, time.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        return formato_nice
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def create(self, vals):
+        ret = super(SaleOrder, self).create(vals)
+        return ret
+
+    @api.multi
+    def write(self, vals):
+        resultado = super(SaleOrder, self).write(vals)
+        return resultado
 
     @api.multi
     def enviar_contrato(self):
@@ -415,6 +452,54 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+    @api.multi
+    def notificar_supervisor(self):
+        partner_ids = self.env.ref('sales_team.group_sale_manager').users.filtered(lambda u: u.id != 1).mapped(
+            'partner_id').ids
+        if partner_ids:
+            ctx = {'res_model': 'sale.order', 'res_id': self.id}
+            vals = {
+                'res_model': 'sale.order',
+                'res_id': self.id,
+                'partner_ids': [(6, False, partner_ids)],
+                'message': "<p>Se ha emitido la cotización <strong>{}</strong> y se le ha agregado como seguidor.</p>".format(
+                    self.name),
+                'send_mail': True
+
+            }
+            invite = self.env['mail.wizard.invite'].with_context(ctx).create(vals)
+            invite.add_followers()
+            self.write({u'approval_state': u'notificado'})
+
+    @api.multi
+    def aprobar_cotizacion(self):
+        self.write({u'approval_state': u'aprobado'})
+
+    @api.multi
+    def no_aprobar_cotizacion(self):
+        self.write({u'approval_state': u'no_aprobado'})
+
+    @api.multi
+    def contract_subject(self):
+        template = u'COTIZACIÓN ({}) - SMART BUSINESS CORPORATION S.A.C. - {} // {} // {}'
+
+        if self.actividad == 'E':
+            actividad = u'EXPORTACIÓN'
+        else:
+            actividad = u'IMPORTACIÓN'
+        partner = self.partner_id.name
+        order = self.name
+        if self.via == 'M':
+            if self.modalidad == 'FCL':
+                sufix = u'FCL // {} // {}'.format(self.linea_id.name, self.tipo_contenedor_id.name)
+            else:
+                sufix = u'LCL'
+        else:
+            sufix = u'AÉREO'
+
+        render = template.format(actividad, partner, order, sufix)
+        return render
 
 
 class SaleOrderLine(models.Model):

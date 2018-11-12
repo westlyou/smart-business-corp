@@ -8,6 +8,7 @@ from odoo.addons import decimal_precision as dp
 class SaleQuest(models.Model):
     _name = 'sale.quest'
 
+    sequence = fields.Integer('Orden')
     template_html = fields.Html(u'Template para mostrar')
     name = fields.Char(u'Nombre')
     default = fields.Float(u'Costo por defecto', digits=dp.get_precision('Account'))
@@ -15,6 +16,8 @@ class SaleQuest(models.Model):
     tiene_variable = fields.Boolean(u'Tiene variable', default=True)
     tiene_condicion = fields.Boolean(u'Condición')
     condicion = fields.Char(u'Código python')
+    importacion = fields.Boolean(u'Aplica para importación', default=False)
+    exportacion = fields.Boolean(u'Aplica para exportación', default=False)
 
     @api.multi
     def aplica(self, order_id):
@@ -45,7 +48,7 @@ class SaleOrderQuest(models.Model):
 
     @api.multi
     def render(self):
-        if self.quest_id.template_html and self.costo:
-            template_html = self.quest_id.template_html.format(self.costo)
+        if self.quest_id.template_html and self.quest_id.tiene_variable:
+            template_html = self.quest_id.template_html.format('%.2f' % (self.costo or 0.0))
             return template_html
         return self.quest_id.template_html
