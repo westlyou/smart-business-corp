@@ -21,7 +21,6 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
                 <button name="action_quotation_send" position="before">
-<<<<<<< HEAD
                     <field name="approval_state" invisible="1"/>
                     <label class="label label-danger" nolabel="1" string="Cotización no aprobada"
                            attrs="{'invisible': [('approval_state','!=','no_aprobado')]}"/>
@@ -35,9 +34,7 @@
                     <button name="enviar_contrato" string="Enviar contrato" type="object" attrs="{'invisible': [('approval_state','!=','aprobado')]}"
                             class="btn-primary"/>
                     <button name="enviar_contrato" string="Reenviar contrato" type="object" states="sent,done"/>
-=======
                     <button name="enviar_contrato" string="Enviar contrato" type="object" states="draft" class="btn-primary"/>
->>>>>>> c6bde32f07f0d5463690f01180cbab48f73d0cc2
                 </button>
                 <xpath expr="//field[@name='date_order']" position="replace">
                     <field name="date_order" string="Fecha de creación"/>
@@ -59,14 +56,11 @@
 
                 <notebook position="inside">
                     <page name="questions" string="Cuestionario">
-<<<<<<< HEAD
                         <button type="object" name="cargar_cuestonario" string="Cargar cuestionario"/>
                         <field name="order_quest_ids" context="{'default_order_id': id}"
-                               options="{'no_create_edit': True}" delete="false">
-=======
+                               options="{'no_create_edit': True}" delete="false"/>
                         <button type="object" name="cargar_cuestonario" string="Cargar cuestionario" />
                         <field name="order_quest_ids" context="{'default_order_id': id}">
->>>>>>> c6bde32f07f0d5463690f01180cbab48f73d0cc2
                             <tree editable="bottom">
                                 <field name="order_id" invisible="1" />
                                 <field name="quest_id" />
