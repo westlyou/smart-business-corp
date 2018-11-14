@@ -121,6 +121,7 @@
                     <field name="pricelist_id" string="Lista de precio"/>
                     <field name="valor_tipo_cambio"/>
                     <field name="referencia_sbc" readonly="1" states="sent,sale,done,cancel"/>
+                    <field name="cantidad_contenedores" />
                 </field>
 
                 <xpath expr="//field[@name='payment_term_id']" position="replace">

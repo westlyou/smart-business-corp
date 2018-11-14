@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
-from odoo.tools import float_is_zero, float_compare
-from odoo.exceptions import UserError, ValidationError
-import bs4, urllib2, urllib
-from datetime import datetime, date, timedelta
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 TIPO_SERVICIO = (
     (u'deposito', u'Depósito'),
@@ -33,6 +30,11 @@ class ProductTemplate(models.Model):
     lcl = fields.Boolean(u'Aplica para Less Container Load')
     linea_naviera_ids = fields.Many2many('sale.linea', string=u'Líneas navieras')
     tipo_contenedor_ids = fields.Many2many('sale.contenedor.tipo', string=u'Contenedores FCL')
+    conceptos_contenedor = fields.Many2many('product.concepto', 'rel_template_concepto_contenedor',
+                                            string=u'Conceptos por contenedor', domain=[('tipo', '=', u'contenedor')])
+    conceptos_administrativo = fields.Many2many('product.concepto', 'rel_template_concepto_contenedor',
+                                                string=u'Conceptos administrativos',
+                                                domain=[('tipo', '=', u'administrativo')])
 
     @api.constrains('tipo_contenedor_ids')
     def _check_tipo_contenedor_ids(self):
