@@ -13,12 +13,12 @@
                             <group>
                                 <field name="representante_ids" widget="many2many_tags"/>
                             </group>
-                            <group>
-                                <field name="vacio_ids" domain="[('tipo_servicio','=','vacio')]" widget="many2many_tags"/>
-                            </group>
-                            <group>
-                                <field name="agente_portuario_ids" domain="[('tipo_servicio','=','agente_portuario')]" widget="many2many_tags"/>
-                            </group>
+                            <!--<group>-->
+                                <!--<field name="vacio_ids" domain="[('tipo_servicio','=','vacio')]" widget="many2many_tags"/>-->
+                            <!--</group>-->
+                            <!--<group> -->
+                                <!--<field name="agente_portuario_ids" domain="[('tipo_servicio','=','agente_portuario')]" widget="many2many_tags"/>-->
+                            <!--</group>-->
                         </group>
                     </sheet>
                 </form>
@@ -49,9 +49,5 @@
                   parent="root_logistica"
                   action="action_linea_naviera"
                   sequence="80"/>
-
-
-
-
     </data>
 </odoo>
