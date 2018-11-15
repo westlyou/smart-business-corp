@@ -359,7 +359,8 @@ class SaleOrder(models.Model):
         })
 
     def _cambiar_order_line(self, tipo, product_id_nuevo, price_unit=0.0):
-        res = {'value': {}}
+        # res = {'value': {}}
+        res = dict(value=dict())
         # order_lines = []
         # encontrado = False
         desc = TIPO_SERVICIO_DICT[tipo]
@@ -373,7 +374,7 @@ class SaleOrder(models.Model):
                 u'tipo': tipo,
                 u'product_id': product_id_nuevo.id,
                 u'product_uom': 1,
-                u'price_unit': price_unit,
+                u'price_unit': concepto.precio,
                 u'product_uom_qty': (concepto.tipo == u'contenedor') and self.cantidad_contenedores or 1,
                 u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
                 u'name': '{}: {}'.format(product_id_nuevo.name, concepto.name),
