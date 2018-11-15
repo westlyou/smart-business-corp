@@ -331,48 +331,97 @@ class SaleOrder(models.Model):
         if self.ganancia >= 0:
             return self._agregar_servicio(u'profit', self.ganancia)
 
+    @api.onchange('cantidad_contenedores')
+    def onchange_cantidad_contenedores(self):
+        if self.cantidad_contenedores > 0:
+            if self.order_line:
+                for line in self.order_line:
+                    if line.por_contenedor:
+                        line.update({
+                            u'product_uom_qty': self.cantidad_contenedores
+                        })
+
     def _agregar_servicio(self, servicio, monto=0.0):
         # tipo = u'profit'
         product_id_nuevo = self.env['product.product'].search([('tipo_servicio', '=', servicio)], limit=1)
         return self._cambiar_order_line(servicio, product_id_nuevo, monto)
 
+    def _json_line(self, line):
+        return (0, False, {
+            u'tipo': line.tipo,
+            u'product_id': line.product_id.id,
+            u'product_uom': 1,
+            u'price_unit': line.price_unit,
+            u'product_uom_qty': line.por_contenedor and self.cantidad_contenedores or 1,
+            u'tax_id': line.tax_id,
+            u'name': line.name,
+            u'por_contenedor': line.por_contenedor
+        })
+
     def _cambiar_order_line(self, tipo, product_id_nuevo, price_unit=0.0):
         res = {'value': {}}
-        order_lines = []
-        encontrado = False
+        # order_lines = []
+        # encontrado = False
         desc = TIPO_SERVICIO_DICT[tipo]
-        if self.order_line:
-            i = 0
-            for line in self.order_line:
-                bandera = line.tipo == tipo
-                if bandera:
-                    encontrado = True
 
-                order_lines.append((0, False, {
-                    u'tipo': bandera and tipo or line.tipo,
-                    u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
-                    u'product_uom': 1,
-                    u'sequence': line.sequence,
-                    u'price_unit': bandera and (tipo == u'profit' and 0.0 or (
-                        (price_unit or product_id_nuevo.lst_price)) or line.price_unit),
-                    u'product_uom_qty': 1,
-                    u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
-                    u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
-                }))
-        if not encontrado:
-            if tipo in (u'agente_portuario', u'vacio'):
-                # Procedemos a leer los conceptos
+        # Descartamos las lineas que pertenezcan a un determinado tipo de tal forma que podemos sobreescribir
+        order_lines = [self._json_line(line) for line in self.order_line if line.tipo != tipo]
 
+        if tipo in (u'agente_portuario', u'vacio'):
+            conceptos = product_id_nuevo.conceptos_contenedor + product_id_nuevo.conceptos_administrativo
+            order_lines = order_lines + [(0, False, {
+                u'tipo': tipo,
+                u'product_id': product_id_nuevo.id,
+                u'product_uom': 1,
+                u'price_unit': price_unit,
+                u'product_uom_qty': (concepto.tipo == u'contenedor') and self.cantidad_contenedores or 1,
+                u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
+                u'name': '{}: {}'.format(product_id_nuevo.name, concepto.name),
+                u'por_contenedor': concepto.tipo == u'contenedor'
+            }) for concepto in conceptos]
+        else:
             order_lines.append((0, False, {
                 u'tipo': tipo,
                 u'product_id': product_id_nuevo.id,
                 u'product_uom': 1,
-                u'sequence': self.order_line and len(self.order_line) * 10 or 0,
-                u'price_unit': price_unit or product_id_nuevo.lst_price,
+                u'price_unit': price_unit,
                 u'product_uom_qty': 1,
                 u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
             }))
+
+        # if self.order_line:
+        #     i = 0
+        #     for line in self.order_line:
+        #         bandera = line.tipo == tipo
+        #         if bandera:
+        #             encontrado = True
+        #
+        #         order_lines.append((0, False, {
+        #             u'tipo': bandera and tipo or line.tipo,
+        #             u'product_id': bandera and product_id_nuevo.id or line.product_id.id,
+        #             u'product_uom': 1,
+        #             u'sequence': line.sequence,
+        #             u'price_unit': bandera and (tipo == u'profit' and 0.0 or (
+        #                 (price_unit or product_id_nuevo.lst_price)) or line.price_unit),
+        #             u'product_uom_qty': 1,
+        #             u'tax_id': bandera and [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])] or line.tax_id,
+        #             u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
+        #         }))
+        # if not encontrado:
+        #     if tipo in (u'agente_portuario', u'vacio'):
+        #     # Procedemos a leer los conceptos
+        #
+        #     order_lines.append((0, False, {
+        #         u'tipo': tipo,
+        #         u'product_id': product_id_nuevo.id,
+        #         u'product_uom': 1,
+        #         u'sequence': self.order_line and len(self.order_line) * 10 or 0,
+        #         u'price_unit': price_unit or product_id_nuevo.lst_price,
+        #         u'product_uom_qty': 1,
+        #         u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
+        #         u'name': '%s - %s' % (desc, product_id_nuevo.name)
+        #     }))
 
         self.order_line = order_lines
         return res
