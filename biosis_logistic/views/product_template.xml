@@ -14,14 +14,14 @@
                                        attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla','agente_portuario','vacio','agente_carga', 'profit'])]}"/>
                                 <field name="maritimo"
                                        attrs="{'invisible':[('tipo_servicio', 'in', ['resguardo','cuadrilla', 'profit'])]}"/>
-                                <field name="conceptos_contenedor"
+                                <!--<field name="conceptos_contenedor"
                                        attrs="{'invisible': [('tipo_servicio','not in',['agente_portuario','vacio'])]}"
                                        context="{'default_tipo': 'contenedor'}"
                                        domain="[('tipo','=','contenedor')]"/>
                                 <field name="conceptos_administrativo"
                                        attrs="{'invisible': [('tipo_servicio','not in',['agente_portuario','vacio'])]}"
                                        context="{'default_tipo': 'administrativo'}"
-                                       domain="[('tipo','=','administrativo')]"/>
+                                       domain="[('tipo','=','administrativo')]"/>-->
                             </group>
                             <group string="Opciones vía marítima" name="opciones_maritima"
                                    attrs="{'invisible':[('maritimo', '=', False)]}">
@@ -35,6 +35,34 @@
                                        widget="many2many_tags"/>
                             </group>
                         </group>
+                    </page>
+                    <page name="conceptos" string="Conceptos logística"
+                          attrs="{'invisible': [('tipo_servicio','not in',['agente_portuario','vacio'])]}">
+                        <group>
+                            <group string="Conceptos por contenedor">
+                                <field name="conceptos_contenedor" nolabel="1"
+                                       context="{'default_tipo': 'contenedor', 'default_product_id': id}">
+                                    <tree editable="bottom">
+                                        <field name="tipo" invisible="1"/>
+                                        <field name="product_id" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="precio"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group string="Conceptos administrativos">
+                                <field name="conceptos_contenedor" nolabel="1"
+                                       context="{'default_tipo': 'administrativo', 'default_product_id': id}">
+                                    <tree editable="bottom">
+                                        <field name="tipo" invisible="1"/>
+                                        <field name="product_id" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="precio"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+
                     </page>
                 </page>
             </field>

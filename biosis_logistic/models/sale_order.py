@@ -58,7 +58,7 @@ TIPO_SERVICIO_DICT = {key: value for key, value in ORDER_LINE_TIPO}
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.depends('order_line.price_total')
+    @api.depends('order_line.price_total', 'cantidad_contenedores')
     def _amount_all(self):
         """
         Compute the total amounts of the SO.
@@ -360,6 +360,9 @@ class SaleOrder(models.Model):
                     u'name': bandera and '%s - %s' % (desc, product_id_nuevo.name) or line.name
                 }))
         if not encontrado:
+            if tipo in (u'agente_portuario', u'vacio'):
+                # Procedemos a leer los conceptos
+
             order_lines.append((0, False, {
                 u'tipo': tipo,
                 u'product_id': product_id_nuevo.id,
@@ -506,3 +509,4 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     tipo = fields.Selection(ORDER_LINE_TIPO, default='otros')
+    por_contenedor = fields.Boolean(u'Cambia por contenedor', default=False)

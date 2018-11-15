@@ -67,6 +67,7 @@
 
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
                     <field name="tipo" invisible="1"/>
+                    <field name="por_contenedor" invisible="1"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
