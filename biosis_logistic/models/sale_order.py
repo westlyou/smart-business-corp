@@ -385,7 +385,7 @@ class SaleOrder(models.Model):
                 u'tipo': tipo,
                 u'product_id': product_id_nuevo.id,
                 u'product_uom': 1,
-                u'price_unit': price_unit,
+                u'price_unit': price_unit or product_id_nuevo.list_price,
                 u'product_uom_qty': 1,
                 u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
                 u'name': '%s - %s' % (desc, product_id_nuevo.name)
