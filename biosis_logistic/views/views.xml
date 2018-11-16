@@ -48,7 +48,8 @@
                     <button name="aprobar_cotizacion" string="Aprobar cotización" type="object" class="btn-success"
                             attrs="{'invisible': [('approval_state','not in',['notificado'])]}"
                             groups="sales_team.group_sale_manager"/>
-                    <button name="enviar_contrato" string="Enviar contrato" type="object" states="sale"
+                    <button name="enviar_contrato" string="Enviar contrato" type="object"
+                            attrs="{'invisible': [('approval_state','not in',['aprobado'])]}"
                             class="btn-primary"/>
                     <button name="enviar_contrato" string="Reenviar contrato" type="object" states="sent,done"/>
                 </button>
