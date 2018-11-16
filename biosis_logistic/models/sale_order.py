@@ -377,7 +377,7 @@ class SaleOrder(models.Model):
                 u'price_unit': concepto.precio,
                 u'product_uom_qty': (concepto.tipo == u'contenedor') and self.cantidad_contenedores or 1,
                 u'tax_id': [(6, False, [tax.id for tax in product_id_nuevo.taxes_id])],
-                u'name': '{}: {}'.format(product_id_nuevo.name, concepto.name),
+                u'name': u'{}: {}'.format(product_id_nuevo.name, concepto.name),
                 u'por_contenedor': concepto.tipo == u'contenedor'
             }) for concepto in conceptos]
         else:
